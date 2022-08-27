@@ -11,6 +11,8 @@ jobs:
       run:
         working-directory: /var/www/udify_mongo/udify-mongo
     steps:
+      - name: add directory into safe 
+        run: git config --global --add safe.directory /var/www/udify_mongo/udify-mongo
       - name: Run Git stash
         run: git stash
       - name: Taking Git Pull
