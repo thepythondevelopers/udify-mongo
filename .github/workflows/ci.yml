@@ -18,7 +18,7 @@ jobs:
       - name: Get Back the .env file
         run: git stash pop
 
-  Creating_docker_Image:
+  Build:
     needs: Git_Pull
     runs-on: self-hosted
     defaults:
@@ -30,7 +30,7 @@ jobs:
 
 
   Deploy_Image:
-    needs: Creating_docker_Image
+    needs: Build 
     runs-on: self-hosted
     defaults:
       run:
