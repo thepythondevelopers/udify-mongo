@@ -14,11 +14,11 @@ jobs:
       - name: add directory into safe 
         run: git config --global --add safe.directory /var/www/udify_mongo/udify-mongo
       - name: Run Git stash
-        run: git stash
+        run: $GIT_SSH git stash
       - name: Taking Git Pull
-        run: git pull
+        run: $GIT_SSH git pull
       - name: Get Back the .env file
-        run: git stash pop
+        run: $GIT_SSH git stash pop
 
   Build:
     needs: Git_Pull
