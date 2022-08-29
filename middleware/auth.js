@@ -1,5 +1,6 @@
 const UserToken = require("../models/userToken");
 const User = require("../models/user");
+const Account = require("../models/account");
 var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
 const { json } = require("body-parser");
@@ -53,14 +54,15 @@ exports.verifyToken = async (req, res, next) => {
 
 
 exports.isAccountCheck = async(req,res,next)=>{
-    
-  const acc = await Account.findOne({ where: { public_id: req.user.id } });
-if (acc === null) {
+
+  const acc = await Account.findOne({  user_id: req.user._id});
+
+  if (acc === null) {
   return res.status(404).json({
     error  : "Account Not Found"
 })
 } else {
-  req.body.account_id = acc.guid;
+  req.body.account_id = acc._id;
 }
 
     next();  

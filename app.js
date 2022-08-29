@@ -12,6 +12,7 @@ const authRoutes = require("./authentication/routes/auth");
 
 const cmsPageRoutes = require("./cmsPage/routes/cms_pages");
 const knowledgebaseRoutes = require("./knowledgebase/routes/knowledgebase");
+const integrationRoutes = require("./integration/routes/integration");
 
 //Connection
 mongoose.connect(process.env.DATABASE,{
@@ -39,6 +40,7 @@ app.use('/authentication-node',authRoutes);
 
 app.use('/cms-node',cmsPageRoutes);
 app.use('/knowledgebase-node',knowledgebaseRoutes);
+app.use('/integration-node',integrationRoutes);
 
 app.listen(port,()=>{
     console.log(`Server is running at port ${port}`)
