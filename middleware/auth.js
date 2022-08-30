@@ -1,6 +1,7 @@
 const UserToken = require("../models/userToken");
 const User = require("../models/user");
 const Account = require("../models/account");
+const Support = require("../models/support");
 var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
 const { json } = require("body-parser");
@@ -113,7 +114,7 @@ exports.adminroleCheck = (req,res,next) =>{
 
 exports.ticketStatusCheck = async (req,res,next) =>{
   parent_id = req.params.parent_id;
-  support_data = await Support.findOne({ where: {id :parent_id }}); 
+  support_data = await Support.findOne({ _id :parent_id }); 
   
   if(support_data!=null && support_data.status=='Closed'){
    return res.json({message:"Ticket Already Closed"})

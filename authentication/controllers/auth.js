@@ -48,7 +48,7 @@ exports.signup =  (req,res)=>{
     }
     account = await Account.create(account_data); 
     update_content = {account_id:account._id};
-    await User.updateMany(
+    await User.findOneAndUpdate(
       {_id: user._id},
       {$set : update_content},
     )
@@ -279,7 +279,7 @@ exports.signupSupplier =  (req,res)=>{
      
     account = await Account.create(account_data); 
     update_content = {account_id:account._id};
-    await User.updateMany(
+    await User.findOneAndUpdate(
       {_id: user._id},
       {$set : update_content},
     )
