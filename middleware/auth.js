@@ -5,11 +5,8 @@ const Support = require("../models/support");
 var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
 const { json } = require("body-parser");
-
 require('dotenv').config();
-
-
-//var pluck = require('arr-pluck');
+var pluck = require('arr-pluck');
 // Protected Routes
 
 
@@ -70,13 +67,11 @@ exports.isAccountCheck = async(req,res,next)=>{
 }
 
 exports.checkStoreId = async(req,res,next)=>{
+  
   if(req.body.store_id !=0){
     body_store_id = req.body.store_id;
-    const inte = await Integration.findAll({ 
-    attributes:  ['store_id'],
-    where: { account_id: req.body.account_id },        deleted_at: {
-    [Op.is]: null, 
-  } });
+    const inte = await Integration.find({account_id: req.body.account_id ,deleted_at: null }).select('store_id');
+
   user_store_id = pluck(inte, 'store_id');
   let intersection = user_store_id.filter(x => body_store_id.includes(x));
   req.body.store_id = intersection;
@@ -125,7 +120,7 @@ exports.ticketStatusCheck = async (req,res,next) =>{
 exports.checkPlanForStripePayment = async (req,res,next) =>{
   id = req.body.public_id;
   
-  user_data = await User.findOne({ where: {guid :id }}); 
+  user_data = await User.findOne({ where: {_id :id }}); 
     
   if(user_data!=null && user_data.plan_status!='trial'){
    return res.json({message:"Already Purchased the Plan."})
