@@ -1,6 +1,6 @@
-module.exports = (sequelize, Sequelize) => {
-    const Product = sequelize.define("products", {
-
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+const ProductSchema = new Schema({  
       store_id : {
         type: Sequelize.CHAR(32),
         allowNull: false,
@@ -55,8 +55,6 @@ module.exports = (sequelize, Sequelize) => {
         type: Date
     }
       
-    },{
-      timestamps: false,
-  });
-    return Product;
-  };
+    },{timestamps: true});
+
+    module.exports = mongoose.model("Product",ProductSchema);

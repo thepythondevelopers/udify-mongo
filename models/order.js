@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const mongoosePaginate = require('mongoose-paginate-v2');
 const OrderSchema = new Schema({
       store_id: {
-        type: Sequelize.CHAR(32),
+        type: String,
         required : true
       },     
       subtotal: {
@@ -108,5 +109,5 @@ const OrderSchema = new Schema({
     }
 
     },{timestamps: true});
-
+    OrderSchema.plugin(mongoosePaginate);
     module.exports = mongoose.model("Order",OrderSchema);

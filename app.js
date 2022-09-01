@@ -17,6 +17,9 @@ const integrationRoutes = require("./integration/routes/integration");
 const supportRoutes = require("./support/routes/support");
 const getInTouchRoutes = require("./getInTouch/routes/get_in_touch");
 const planRoutes = require("./plan/routes/plan");
+const OrderShopifyRoutes = require("./order/routes/order");
+const customerRoutes = require("./customers/routes/customer");
+const profileRoutes = require("./profile/routes/profile");
 //Connection
 mongoose.connect(process.env.DATABASE,{
     useNewUrlParser : true,
@@ -52,7 +55,9 @@ app.use('/support-node',supportRoutes);
 app.use('/get-in-touch-node',getInTouchRoutes);
 app.use('/stripe-node',planRoutes);
 app.use('/stripe-node',stripeRoutes);
-
+app.use('/order-node',OrderShopifyRoutes);
+app.use('/customer-node',customerRoutes);
+app.use('/profile-node',profileRoutes);
 app.listen(port,()=>{
     console.log(`Server is running at port ${port}`)
 });

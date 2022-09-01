@@ -9,32 +9,27 @@ const moment= require('moment');
 exports.getUsers = async (req,res) =>{
     const id = req.params.id;
     const search_string = req.body.search_string!=null ? req.body.search_string : "";
-    const page = req.body.page!=null ? req.body.page-1 : 0;
+    const page = req.body.page!=null ? req.body.page : 1;
     
     limit = 10;
-    user_count = await User.find({
-        access_group: { $ne: 'admin' },
-        $or:[
+    const options = {
+      page: page,
+      limit: 10,
+      collation: {
+        locale: 'en',
+      },
+    };
+    
+    await User.paginate({access_group: { $ne: 'admin' },
+            $or:[
         {'first_name': { $regex: '.*' + `${search_string}` + '.*' }},
         {'last_name': { $regex: '.*' + `${search_string}` + '.*' }},
         {'email': { $regex: '.*' + `${search_string}` + '.*' }},
         ]
-    }).countDocuments().exec();
-
-    user_data = await User.find({
-      access_group: { $ne: 'admin' },
-      $or:[
-      {'first_name': { $regex: '.*' + `${search_string}` + '.*' }},
-      {'last_name': { $regex: '.*' + `${search_string}` + '.*' }},
-      {'email': { $regex: '.*' + `${search_string}` + '.*' }},
-      ]
-      }).skip(page * limit)
-      .limit(limit).exec();
-
-    res.send({
-      data : user_data,
-      count: user_count
+    }, options, function (err, result) {
+      return res.json(result);
     });
+
      
     }
   exports.getUser = (req,res) =>{

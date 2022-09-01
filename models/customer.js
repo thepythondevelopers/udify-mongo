@@ -1,10 +1,10 @@
-module.exports = (sequelize, Sequelize) => {
-    const Customer = sequelize.define("customers", {
-      
-      store_id: {
-        allowNull: false,
-        type: Sequelize.CHAR(32),
-        allowNull: false,
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+const mongoosePaginate = require('mongoose-paginate-v2');
+const CustomerSchema = new Schema({      
+    store_id: {
+        type: String,
+        required : true
       },
       first_name: {
         type: String
@@ -13,20 +13,20 @@ module.exports = (sequelize, Sequelize) => {
         type: String
       },     
       accepts_marketing:{
-        type: Sequelize.BOOLEAN()
+        type: Boolean
       },
      email:{
         type: String
      },
     orders_count:{
-        type: Sequelize.INTEGER()
+        type: Number
     },
     total_spent:{
-        type: Sequelize.INTEGER()
+        type: Number
     },
     tax_exempt:{
-        type: Sequelize.BOOLEAN(),
-        defaultValue: 0
+        type: Boolean,
+        default: 0
     },
     shopify_id:{
         type: String
@@ -65,18 +65,16 @@ module.exports = (sequelize, Sequelize) => {
         type: String
     },
     default:{
-        type: Sequelize.BOOLEAN()
+        type: Boolean
     },
     state:{
       type: String
   },
     sys_updated_at:{
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW')
+        type: Date,
+        default: Date.now
     } 
 
-    },{
-      timestamps: false
-  });
-    return Customer;
-  };
+    },{timestamps: true});
+    CustomerSchema.plugin(mongoosePaginate);
+    module.exports = mongoose.model("Customer",CustomerSchema);
