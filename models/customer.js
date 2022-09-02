@@ -6,6 +6,12 @@ const CustomerSchema = new Schema({
         type: String,
         required : true
       },
+      created_at:{
+        type: Date
+    },
+    updated_at:{
+        type: Date
+    },
       first_name: {
         type: String
       },

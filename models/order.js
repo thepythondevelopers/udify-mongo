@@ -18,6 +18,12 @@ const OrderSchema = new Schema({
         type: String,
         required : true
     },
+    created_at:{
+        type: Date
+    },
+    updated_at:{
+        type: Date
+    },
       closed_at: {
         type: Date
       },

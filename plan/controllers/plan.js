@@ -57,7 +57,7 @@ exports.updatePlan = async (req,res)=>{
     app_id : product.id,
     price_id : product.default_price.id,
     type : req.body.type,
-    price : req.body.price,
+    
     features : req.body.features
   }
   

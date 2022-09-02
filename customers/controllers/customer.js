@@ -10,7 +10,7 @@ const {validationResult} = require("express-validator");
 exports.syncCustomer = (req,res) =>{
   page_info = req.body.page_info;
   const id = req.params.integration_id;
-  Integration.findByPk(id)
+  Integration.findOne({_id : id})
     .then( async data => {
       if (data) {
         const shopify = new Shopify({

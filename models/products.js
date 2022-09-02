@@ -1,9 +1,16 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const mongoosePaginate = require('mongoose-paginate-v2');
 const ProductSchema = new Schema({  
       store_id : {
-        type: Sequelize.CHAR(32),
-        allowNull: false,
+        type: String,
+        required : true
+    },
+    created_at:{
+        type: Date
+    },
+    updated_at:{
+        type: Date
     },
     body_html: {
         type: String
@@ -13,7 +20,7 @@ const ProductSchema = new Schema({
     },
     id :{
         type: String,
-        allowNull: false,
+        required : true
     },
     images:{
         type: String
@@ -25,7 +32,7 @@ const ProductSchema = new Schema({
         type: String
     },
     published_at:{        
-        type: Sequelize.DATE,
+        type: Date,
     },
     published_scope:{
         type: String
@@ -52,9 +59,16 @@ const ProductSchema = new Schema({
         type: String
     },
     sys_updated_at:{
-        type: Date
+        type: Date,
+        default: Date.now
     }
       
     },{timestamps: true});
 
+    // ProductSchema.virtual('ProductVariant', {
+    //     ref: 'ProductVariant',
+    //     localField: 'id',
+    //     foreignField: 'product_id'
+    //   });
+      ProductSchema.plugin(mongoosePaginate);
     module.exports = mongoose.model("Product",ProductSchema);

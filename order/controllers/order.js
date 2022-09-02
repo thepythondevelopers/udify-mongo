@@ -6,7 +6,7 @@ const Integration = require("../../models/integration");
 exports.syncOrder =  (req,res) =>{
   //page_info = req.body.page_info;
   const id = req.params.integration_id;
-  Integration.findByPk(id)
+  Integration.findOne({_id : id})
     .then( async data => {
       if (data) {
         const shopify = new Shopify({
@@ -112,7 +112,7 @@ exports.getOrderAccordingtoStore = async (req,res) =>{
     }
        
   const search_string = req.body.search_string!=null ? req.body.search_string : "";
-  const page = req.body.page!=null ? req.body.page-1 : 0;
+  const page = req.body.page!=null ? req.body.page : 1;
   const options = {
     page: page,
     limit: 10,

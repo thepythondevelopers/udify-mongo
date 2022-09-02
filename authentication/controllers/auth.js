@@ -56,7 +56,8 @@ exports.signup =  (req,res)=>{
     res.json({
       first_name : user.first_name,
       email : user.email,
-      id : user._id
+      id : user._id,
+      access_group : user.access_group
   });
   }).catch((err)=>{
     return res.status(400).json({
@@ -91,7 +92,7 @@ exports.signin = (req,res) =>{
         user_email = user.email;
         user_role = user.role;
         user_name = user.first_name +' '+ user.last_name; 
-
+        access_group = user.access_group
         
 
       await UserToken.create({token:token}).then( usertoken => {
@@ -103,7 +104,7 @@ exports.signin = (req,res) =>{
       });
       await UserToken.deleteOne({ createdAt:{$lte:moment().subtract(1, 'days').toDate()} });
 
-        return res.json({token,user:{user_name,user_email,user_role}});
+        return res.json({token,user:{user_name,user_email,user_role,access_group}});
       } else {
         return res.json({error:"Incorrect Password"});
       }
@@ -145,7 +146,7 @@ exports.signinSupplier = (req,res) =>{
         user_email = user.email;
         user_role = user.role;
         user_name = user.first_name +' '+ user.last_name; 
-
+        access_group = user.access_group;
         
 
       await UserToken.create({token:token}).then( usertoken => {
@@ -157,7 +158,7 @@ exports.signinSupplier = (req,res) =>{
       });
       await UserToken.deleteOne({ createdAt:{$lte:moment().subtract(1, 'days').toDate()} });
 
-        return res.json({token,user:{user_name,user_email,user_role}});
+        return res.json({token,user:{user_name,user_email,user_role,access_group}});
       } else {
         return res.json({error:"Incorrect Password"});
       }
@@ -200,7 +201,7 @@ exports.signinAdmin = (req,res) =>{
         user_email = user.email;
         user_role = user.role;
         user_name = user.first_name +' '+ user.last_name; 
-
+        access_group = user.access_group;
         
 
       await UserToken.create({token:token}).then( usertoken => {
@@ -212,7 +213,7 @@ exports.signinAdmin = (req,res) =>{
       });
       await UserToken.deleteOne({ createdAt:{$lte:moment().subtract(1, 'days').toDate()} });
 
-        return res.json({token,user:{user_name,user_email,user_role}});
+        return res.json({token,user:{user_name,user_email,user_role,access_group}});
       } else {
         return res.json({error:"Incorrect Password"});
       }
@@ -286,7 +287,8 @@ exports.signupSupplier =  (req,res)=>{
     res.json({
       first_name : user.first_name,
       email : user.email,
-      id : user._id
+      id : user._id,
+      access_group : user.access_group
   });
   }).catch((err)=>{
     return res.status(400).json({
