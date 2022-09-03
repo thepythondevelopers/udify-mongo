@@ -96,7 +96,7 @@ try{
 
   exports.get_profile = (req,res)=>{
 
-    User.findOne({_id: req.user.id}).select('-password').populate('account_id').then(function (user) {
+    User.findOne({_id: req.user._id}).select('-password').populate('account_id').then(function (user) {
      if (!user) {
         res.json({error:'User Not Found.'});
      } else {

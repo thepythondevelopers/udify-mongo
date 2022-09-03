@@ -368,8 +368,9 @@ exports.signupSupplier =  (req,res)=>{
      if (!user) {
         res.json({error:'Token Expire or Incorrect'});
      } else { 
+      const hash = bcrypt.hashSync(req.body.password, 10);
       content =  { 
-        password: req.body.password,
+        password: hash,
         password_reset_token: ""
       }
       

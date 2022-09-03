@@ -71,7 +71,8 @@ exports.getUsers = async (req,res) =>{
     
         //create token
         
-      var token = jwt.sign({ id: user.guid, access_group: user.access_group }, process.env.SECRET,{ expiresIn: '1d'  });
+     
+      var token = jwt.sign({ _id: user._id,email:user.email,access_group:user.access_group }, process.env.SECRET,{ expiresIn: '1d'  });
       
       user_token_data = {
         token : token 
