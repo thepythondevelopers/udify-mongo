@@ -2,6 +2,7 @@ const UserToken = require("../models/userToken");
 const User = require("../models/user");
 const Account = require("../models/account");
 const Support = require("../models/support");
+const Integration = require("../models/integration");
 var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
 const { json } = require("body-parser");
@@ -73,6 +74,7 @@ exports.checkStoreId = async(req,res,next)=>{
     const inte = await Integration.find({account_id: req.body.account_id ,deleted_at: null }).select('store_id');
 
   user_store_id = pluck(inte, 'store_id');
+  
   let intersection = user_store_id.filter(x => body_store_id.includes(x));
   req.body.store_id = intersection;
   }
