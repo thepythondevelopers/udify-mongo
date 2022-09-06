@@ -237,7 +237,7 @@ exports.productVariationUpdate =  (req,res) =>{
 
 exports.productVariationDelete =  (req,res) =>{
     const id = req.params.store_id;
-    Integration.findOne({ where: { store_id: id } })
+    Integration.findOne({ store_id: id  })
       .then( async data => {
         if (data) {
           const shopify = new Shopify({
