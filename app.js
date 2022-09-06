@@ -21,6 +21,7 @@ const OrderShopifyRoutes = require("./order/routes/order");
 const customerRoutes = require("./customers/routes/customer");
 const profileRoutes = require("./profile/routes/profile");
 const productRoutes = require("./product/routes/product");
+const productVariationRoutes = require("./product/routes/productVariation");
 //Connection
 mongoose.connect(process.env.DATABASE,{
     useNewUrlParser : true,
@@ -62,6 +63,8 @@ app.use('/order-node',OrderShopifyRoutes);
 app.use('/customer-node',customerRoutes);
 app.use('/profile-node',profileRoutes);
 app.use('/product-node',productRoutes);
+app.use('/product-node',productVariationRoutes);
+
 app.listen(port,()=>{
     console.log(`Server is running at port ${port}`)
 });

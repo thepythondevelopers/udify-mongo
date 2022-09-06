@@ -51,11 +51,11 @@ exports.updatePlan = async (req,res)=>{
   const product = await stripe.products.update(app_id, {
     name: req.body.name
   });
-
+  
   data = {
     name : req.body.name,
     app_id : product.id,
-    price_id : product.default_price.id,
+    price_id : product.default_price,
     type : req.body.type,
     
     features : req.body.features

@@ -1,7 +1,5 @@
 const Shopify = require('shopify-api-node');
-
 require('dotenv').config();
-
 const Integration = require("../../models/integration");
 const Product = require("../../models/products");
 const ProductVariant = require("../../models/product_variants");
@@ -114,7 +112,13 @@ exports.deleteProductShopify = async (req,res) =>{
           });
           product =  await shopify.product.delete(req.params.product_id);
 
-          Product.deleteOne({id : req.params.product_id})
+          
+          await Product.deleteOne(
+            {id : req.params.product_id},
+            (err,data) => {
+                
+            }
+            )
           return res.json({message : "Product Deleted Successfully."});
         }else{
           res.status(401).send({
