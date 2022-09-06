@@ -98,16 +98,10 @@ exports.syncOrder =  (req,res) =>{
 
 exports.getOrderAccordingtoStore = async (req,res) =>{
   
-    try {  
+      
     store_id =req.body.store_id!=null ? req.body.store_id : [];
     if(store_id==0){
-      store_id = await Integration.findAll({
-        attributes: ['store_id'],
-        deleted_at: {
-          [Op.is]: null, 
-        },
-        where: {account_id :req.body.account_id},
-      })
+      store_id = await Integration.find({account_id :req.body.account_id,deleted_at:null}).select('store_id');
       store_id = pluck(store_id, 'store_id');
     }
        
@@ -151,14 +145,7 @@ exports.getOrderAccordingtoStore = async (req,res) =>{
       return res.json(result);
     });
   } 
-    return res.json({data:result});
-  }  catch (err) {
-      return res.status(401).send({
-        message : "Something Went Wrong",
-        error :err
-      });
-    }
-  }
+}
 
   exports.getSingleOrder = async (req,res) =>{
     const id = req.params.order_id;

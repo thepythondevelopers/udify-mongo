@@ -6,12 +6,6 @@ const ProductSchema = new Schema({
         type: String,
         required : true
     },
-    created_at:{
-        type: Date
-    },
-    updated_at:{
-        type: Date
-    },
     body_html: {
         type: String
       },

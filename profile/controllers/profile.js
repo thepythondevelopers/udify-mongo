@@ -7,7 +7,7 @@ require('dotenv').config();
 
 exports.updateUserProfile1 = async (req,res)=>{
   
-    const id = req.user.id;
+    const id = req.user._id;
         
         content =  {
           avatar : req.body.avatar,       
@@ -50,7 +50,7 @@ exports.updateUserProfile1 = async (req,res)=>{
             error : errors.array()
         })
     }
-    const id = req.user.id;
+    const id = req.user._id;
    
     account_content =  { 
       company : req.body.company,

@@ -64,7 +64,7 @@ if(req.body.startedDate!=null && req.body.endDate!=null ){
   
  
    await Product.paginate({ store_id: { $in: store_id } ,
-    created_at: {
+    published_at: {
       $gte: startedDate,
       $lte: endDate
   },
