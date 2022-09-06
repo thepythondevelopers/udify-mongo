@@ -1,6 +1,6 @@
 const Shopify = require('shopify-api-node');
 
-const { v4: uuidv4 } = require('uuid');
+
 const Integration = require("../../models/integration");
 const Product = require("../../models/products");
 const ProductVariant = require("../../models/product_variants");
