@@ -174,6 +174,7 @@ exports.productVariationUpdate =  (req,res) =>{
     Integration.findOne({ store_id: id  })
       .then( async data => {
         if (data) {
+          
           const shopify = new Shopify({
             shopName: data.domain,
             accessToken: data.access_token

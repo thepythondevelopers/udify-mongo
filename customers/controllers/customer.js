@@ -263,7 +263,7 @@ exports.createCustomerShopify = async (req,res) =>{
 
 exports.deleteCustomerShopify = async (req,res) =>{
   
-  try {
+  
     const id = req.params.store_id;
     Integration.findOne({  store_id: id  })
       .then( async data => {
@@ -272,26 +272,24 @@ exports.deleteCustomerShopify = async (req,res) =>{
             shopName: data.domain,
             accessToken: data.access_token
           });
-          customer =  await shopify.customer.remove(req.params.customer_id);
-          Customer.remove({ shopify_id : req.params.customer_id })
+          
+            await shopify.customer.delete(req.params.customer_id);
+           await Customer.remove({ shopify_id : req.params.customer_id })
+
           return res.json({message : "Customer Deleted Successfully."});
         }else{
           res.status(401).send({
             message : "Store Not Found."
           });  
         }
+
       }).catch(err => {
         res.status(500).send({
-          err_m : err
+          message: "Something Went Wrong",
+          error : err
         });
       });  
-  }
-  catch (err) {
-    return res.status(401).send({
-      message : "Something Went Wrong",
-      error :err
-    });
-  }
+  
 }
 
 exports.updateCustomerShopify = async (req,res) =>{
