@@ -111,3 +111,42 @@ try{
       });
     });
   }
+
+  exports.supplierProfileUpdate = async (req,res)=>{
+  
+    const id = req.user._id;
+        
+    content =  {
+      cover : req.body.cover,       
+      title: req.body.title,
+      avatar: req.body.avatar,
+      name: req.body.name,
+      address_street : req.body.address_street,
+      address_city : req.body.address_city,
+      about : req.body.about
+  }
+    
+    
+     
+      await Account.findOneAndUpdate(
+        { user_id: id, deleted_at: null},
+        {$set : content},
+        {new: true},
+        (err,account) => {
+            if(err){
+                return res.status(404).json({
+                    error : err
+                })
+            
+            }
+    
+            if(account===null){
+                return res.status(404).json({
+                    message : "No Data Found"
+                })
+            }
+    
+            res.send({message:'Successfully Updated'});
+        }
+        )
+  }

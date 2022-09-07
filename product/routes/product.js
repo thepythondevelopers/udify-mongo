@@ -1,7 +1,7 @@
 var express = require('express')
 var router = express.Router()
 const { check} = require("express-validator");
-const {getSingleProduct,getProductAccordingtoStore,deleteProductShopify,createProductShopify,updateProductShopify,syncProduct} = require("../controllers/product");
+const {getSingleProduct,getProductAccordingtoStore,deleteProductShopify,createProductShopify,updateProductShopify,syncProduct,test} = require("../controllers/product");
 const {verifyToken,isAccountCheck,roleCheck,checkStoreId} = require("../../middleware/auth");
 
 
@@ -21,7 +21,7 @@ router.post("/update-product/:store_id/:product_id",verifyToken,updateProductSho
 
 router.post("/delete-shopify-product/:store_id/:product_id",verifyToken,deleteProductShopify);
 
-
+router.get("/test",test);
 
 
 module.exports = router;

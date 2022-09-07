@@ -109,6 +109,26 @@ exports.adminroleCheck = (req,res,next) =>{
   next();
 }
 
+exports.supplierRoleCheck = (req,res,next) =>{
+  
+  if(req.user.access_group!='supplier'){
+      return res.status(404).json({
+          err  : "Does't Not have permission."
+      })
+  }  
+  next();
+}
+
+exports.userRoleCheck = (req,res,next) =>{
+  
+  if(req.user.access_group!='user'){
+      return res.status(404).json({
+          err  : "Does't Not have permission."
+      })
+  }  
+  next();
+}
+
 exports.ticketStatusCheck = async (req,res,next) =>{
   parent_id = req.params.parent_id;
   support_data = await Support.findOne({ _id :parent_id }); 

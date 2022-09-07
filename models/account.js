@@ -49,9 +49,22 @@ const accountSchema = new Schema({
     avatar:{
       type: String
     },
+    cover:{
+      type: String
+    },
+    vendor_email:{
+      type: String
+    },
+    store_name:{
+      type: String
+    },
+    title:{
+      type: String
+    },
     company:{
       type: String
-    },deleted_at:{
+    },
+    deleted_at:{
       type: Date
     }
       

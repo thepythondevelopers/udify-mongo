@@ -3,8 +3,8 @@ var router = express.Router()
 const { check} = require("express-validator");
 
 var multer = require('multer');
-const {updateUserProfile2,updateUserProfile1,get_profile} = require("../controllers/profile");
-const {verifyToken,isAccountCheck,roleCheck} = require("../../middleware/auth");
+const {updateUserProfile2,updateUserProfile1,get_profile,supplierProfileUpdate} = require("../controllers/profile");
+const {verifyToken,isAccountCheck,roleCheck,supplierRoleCheck} = require("../../middleware/auth");
 
 
 const storage = multer.diskStorage({
@@ -28,7 +28,7 @@ var upload = multer({
   fileFilter:fileFilter
 })
 
-router.post("/update-user-profile1",verifyToken,upload.single('avatar'),updateUserProfile1);
+router.post("/update-user-profile1",verifyToken,updateUserProfile1);
 
 router.post("/update-user-profile2",verifyToken,[
 
@@ -45,6 +45,8 @@ router.post("/update-user-profile2",verifyToken,[
 
 
 router.get("/get-profile",verifyToken,get_profile);
+
+router.post("/supplier-profile-update",verifyToken,supplierRoleCheck,supplierProfileUpdate);
 
 
 
