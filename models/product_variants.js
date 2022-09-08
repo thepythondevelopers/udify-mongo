@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const {ObjectId} = mongoose.Schema;
 const ProductVariantSchema = new Schema({        
       store_id:{
         type: String,
@@ -77,6 +78,10 @@ const ProductVariantSchema = new Schema({
       image_id:{
         type: String
       },
+      supplier_id:{
+        type : ObjectId,
+        ref: "User"
+    },
       created_at:{
         type: Date
       },

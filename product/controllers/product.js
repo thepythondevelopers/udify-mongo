@@ -1,6 +1,5 @@
 const Shopify = require('shopify-api-node');
 require('dotenv').config();
-const User = require("../../models/user");
 const Integration = require("../../models/integration");
 const Product = require("../../models/products");
 const ProductVariant = require("../../models/product_variants");
@@ -471,25 +470,4 @@ exports.syncProduct =  (req,res) =>{
             }));
   }
 
-  exports.test =  async (req,res) =>{
-    const shopify = new Shopify({
-      shopName: 'pamsar-test',
-      accessToken: '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'
-    });
-    const products = await shopify.product.get('7634078466266');
-    return res.json(products);
-    user_id = await User.find({access_group :'abc',deleted_at:null}).select('_id');
-    user_id = pluck(user_id, '_id');
-    const page = req.body.page!=null ? req.body.page : 1;
-const options = {
-  page: page,
-  limit: 10,
-  collation: {
-    locale: 'en',
-  },
-};
-result = await Product.paginate({ user_id: { $in: user_id } 
-}, options, function (err, result) {
-  return res.json(result);
-});
-  }  
+  

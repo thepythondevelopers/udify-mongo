@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const {ObjectId} = mongoose.Schema;
 const mongoosePaginate = require('mongoose-paginate-v2');
 const ProductSchema = new Schema({  
       store_id : {
@@ -51,6 +52,10 @@ const ProductSchema = new Schema({
     },
     status:{
         type: String
+    },
+    supplier_id:{
+        type : ObjectId,
+        ref: "User"
     },
     sys_updated_at:{
         type: Date,
