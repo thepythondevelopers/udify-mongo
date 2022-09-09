@@ -55,6 +55,7 @@ const StripeSubscriptionSchema = new Schema({
       plan_id: {
         // type : ObjectId,
         // ref: "Plans",
+        type : String,
         required : true
       },
       customer_stripe_id: {
