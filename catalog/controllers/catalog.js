@@ -48,11 +48,14 @@ exports.getVendorCatalog = async (req,res) =>{
                 message : "Something Went Wrong"
             })
         }
+        if(catalog==null){
+            cat = []
+            return res.json(cat);
+        }
         product_id = catalog.product_id;
         if(product_id==null || product_id.length==0){
-            return res.status(400).json({
-                message : "Product Id not found."
-            })
+            cat = []
+            return res.json(cat);
         }
         result = await VendorProduct.aggregate([
             { $match:{

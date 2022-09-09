@@ -83,17 +83,12 @@ exports.stripeSubscription = async (req,res)=>{
             latest_invoice_payment_intent_status : subscription.latest_invoice.payment_intent.status
           }
           //return res.json(subscription_data);
-          await StripeSubscription.create(subscription_data).then(  data => {}).catch(err => {
-            res.status(500).send({
-              message:
-                err.message || "Something went wrong."
-            });
-          }); 
+          await StripeSubscription.create(subscription_data);
           
           
           
           if(subscription.status=='active'){
-            await Plan.findOne({ where: { price_id: priceId } }).then( async data => {
+            await Plan.findOne({  price_id: priceId  }).then( async data => {
               
               await User.findOneAndUpdate(
                 {  _id: public_id },
