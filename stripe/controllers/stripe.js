@@ -32,7 +32,7 @@ exports.stripeSubscription = async (req,res)=>{
        // displayError(result);
 
       } else {
-          public_id = req.body.public_id;
+          public_id = req.user._id;
           customerId =  req.body.customerId;
           paymentMethodId = result.id;
           priceId = req.body.priceId;
