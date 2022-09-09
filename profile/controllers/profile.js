@@ -123,7 +123,10 @@ try{
       name: req.body.name,
       address_street : req.body.address_street,
       address_city : req.body.address_city,
-      about : req.body.about
+      about : req.body.about,
+      vendor_email : req.body.vendor_email,
+      store_name : req.body.store_name,
+      company : req.body.company
   }
     
     
