@@ -12,34 +12,98 @@ exports.createCatalog = async (req,res) =>{
       })
   }
               
-  
+    body_product_id = req.body.product_id
     content = {
         user_id : req.user._id,
-        product_id : req.body.product_id
+        product_id : body_product_id
     }  
 
-     
-      
-      await Catalog.findOneAndUpdate(
-        {user_id:req.user._id},
-        {$set : content},
-        {upsert: true, new: true},
-        
-        (err,catalog) => {
-            if(err){
-                return res.status(404).json({
-                    error : err
-                })
-            
-            }
-    
-    
-            return res.json(catalog);
+    Catalog.findOne({user_id:req.user._id}).exec(async (err,catalog)=>{
+        if(err){
+            return res.status(400).json({
+                message : "Something Went Wrong"
+            })
         }
-        )
+        if(catalog!=null){
+            product_id = catalog.product_id;
+            body_product_id.forEach(element => {
+                
+            if(!product_id.includes(element)){          
+                product_id.push(element);               
+            }
+              });
+
+              await Catalog.findOneAndUpdate(
+                {user_id:req.user._id},
+                {$set : {product_id:product_id}},
+                { new: true},
+                (err,catalog) => {
+                    if(err){
+                        return res.status(404).json({
+                            error : err
+                        })
+                    
+                    }
+                    return res.json(catalog);
+                }
+                )
+            
+        }else{
+            catalog =new Catalog(content);
+            catalog.save((err,catalog)=>{
+                if(err){
+                    return res.status(400).json({
+                        message : err
+                    })
+                }
+                return res.json(content);
+            })
+        }
         
+    })            
       
 }
+
+exports.removeProductCatalog = async (req,res) =>{
+    Catalog.findOne({user_id:req.user._id}).exec(async (err,catalog)=>{
+        if(err){
+            return res.status(400).json({
+                message : "Something Went Wrong"
+            })
+        }
+        if(catalog!=null){
+            body_product_id = req.params.product_id;
+            product_id = catalog.product_id;
+
+            if(product_id.includes(body_product_id)){          
+                product_id.splice(product_id.indexOf(body_product_id), 1);
+            }
+
+
+              await Catalog.findOneAndUpdate(
+                {user_id:req.user._id},
+                {$set : {product_id:product_id}},
+                { new: true},
+                (err,catalog) => {
+                    if(err){
+                        return res.status(404).json({
+                            error : err
+                        })
+                    }
+                    return res.json(catalog);
+                }
+                )
+            
+        }else{
+            return res.status(404).json({
+                message : "No Data Found"
+            })
+            
+        }
+        
+    })            
+}
+
 
 exports.getVendorCatalog = async (req,res) =>{
     Catalog.findOne({user_id:req.user._id}).exec(async (err,catalog)=>{

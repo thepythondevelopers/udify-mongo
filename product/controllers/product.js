@@ -382,8 +382,8 @@ exports.syncProduct =  (req,res) =>{
             
           } while (params !== undefined);
           
-          Product.remove({ store_id : store_id });
-          ProductVariant.remove({ store_id : store_id });
+          await Product.remove({ store_id : store_id });
+          await ProductVariant.remove({ store_id : store_id });
           //product_data.forEach( async element => {                
           await Promise.all(product_data.map(async (element) => {  
           
@@ -405,12 +405,10 @@ exports.syncProduct =  (req,res) =>{
                 metafields_global_description_tag:"",
                 vendor:element.vendor,  
                 status:element.status
-            };
-            await   Product.create(product_content);
-            await shopify_sync_variants(element.variants,store_id);
+            }
+               Product.create(product_content);
+             shopify_sync_variants(element.variants,store_id);
            // variants = element.variants;
-            
-                                    
             
       }));
       return res.json({message:"Product Synced Successfully"});
@@ -465,7 +463,7 @@ exports.syncProduct =  (req,res) =>{
                         title : product_variant.title,
                         image_id : product_variant.image_id
                 }
-                await   ProductVariant.create(product_variant_data);
+                   ProductVariant.create(product_variant_data);
 
             }));
   }
