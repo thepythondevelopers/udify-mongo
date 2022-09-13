@@ -1,8 +1,8 @@
 const Shopify = require('shopify-api-node');
 const Order = require("../../models/order");
 const Integration = require("../../models/integration");
-    
-
+const UserVendorProduct = require("../../models/userVendorProduct");    
+const UserVendorOrder = require("../../models/userVendorOrder");
 exports.syncOrder =  (req,res) =>{
   //page_info = req.body.page_info;
   const id = req.params.integration_id;
@@ -17,7 +17,7 @@ exports.syncOrder =  (req,res) =>{
 
         //order_data = await shopify.order.list();
         const store_id = data.store_id;
-        
+        const integration_id = data._id;
         order_data=[];
         let params = { limit: 250 };
         // product_data =  await shopify.product.list(params);
@@ -31,7 +31,7 @@ exports.syncOrder =  (req,res) =>{
           
         } while (params !== undefined);
         
-        Order.remove({ store_id : store_id })
+        await Order.remove({ store_id : store_id })
         await Promise.all(order_data.map(async (element) => {
           product_ids = [];
           variant_ids = [];
@@ -72,14 +72,26 @@ exports.syncOrder =  (req,res) =>{
               browser_ip : element.browser_ip,
               fulfillment_status : element.fulfillment_status,
               order_status_url : element.order_status_url,
-              customer_id : element.customer.id,
+              customer_id : element.customer!=null ? element.customer.id : '',
               variant_ids : JSON.stringify(variant_ids),
               product_ids: JSON.stringify(product_ids)
           }	
-
+          
 
           Order.create(order_content);
-
+          
+          vendorOrder = await UserVendorProduct.findOne({product_id: { $in: product_ids }})
+          if(vendorOrder!=null){
+            vendorOrderData = {
+              user_id : req.user._id,
+              supplier_id : vendorOrder.supplier_id,
+              product_id : vendorOrder.product_id,
+              shopify_order_id :  element.id, 
+              integration_id : integration_id,
+              store_id : store_id
+            }
+            UserVendorOrder.create(vendorOrderData);
+          }
       }));
       return res.json(
           {message:"Order Synced Successfully"});

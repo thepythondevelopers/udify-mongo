@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const mongoosePaginate = require('mongoose-paginate-v2');
-var aggregatePaginate = require("mongoose-aggregate-paginate-v2");
-const OrderSchema = new Schema({
+//var aggregatePaginate = require("mongoose-aggregate-paginate-v2");
+const orderVendorSchema = new Schema({
       store_id: {
         type: String,
         required : true
@@ -117,7 +117,7 @@ const OrderSchema = new Schema({
 
     },{timestamps: true});
    // OrderSchema.index({ name: 'text', total: 'text', subtotal: 'text' })
-    OrderSchema.plugin(aggregatePaginate);
-    OrderSchema.plugin(mongoosePaginate);
+   //orderVendorSchema.plugin(aggregatePaginate);
+   orderVendorSchema.plugin(mongoosePaginate);
     
-    module.exports = mongoose.model("Order",OrderSchema);
+    module.exports = mongoose.model("OrderVendor",orderVendorSchema);
