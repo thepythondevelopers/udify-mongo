@@ -48,4 +48,11 @@ exports.getVendorCustomer =  async (req,res) =>{
   }  
   
 
-  }    
+  } 
+  
+  exports.getUser =  async (req,res) =>{
+    
+    user = await User.find({_id: req.params.id}).populate('account_id').select('-password')
+    return res.json(user);
+  
+    }    

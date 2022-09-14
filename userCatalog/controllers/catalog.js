@@ -188,3 +188,59 @@ exports.addProduct =  async (req,res) =>{
 
 
   }    
+
+  exports.productSingleVendor =  async (req,res) =>{
+    user_id =  req.params.user_id;
+   
+
+
+   
+   
+const search_string = req.body.search_string!=null ? req.body.search_string : "";
+const page = req.body.page!=null ? req.body.page : 1;
+const options = {
+  page: page,
+  limit: 10,
+  collation: {
+    locale: 'en',
+  },
+};
+if(req.body.startedDate!=null && req.body.endDate!=null ){
+  
+  const startedDate = new Date(req.body.startedDate);
+  const endDate = new Date(req.body.endDate);
+  endDate.setDate(endDate.getDate() + 1);
+
+  
+ 
+   await VendorProduct.paginate({ user_id:  user_id ,
+    published_at: {
+      $gte: startedDate,
+      $lte: endDate
+  },
+    $or:[
+          {'id': { $regex: '.*' + `${search_string}` + '.*' }},
+          {'product_type': { $regex: '.*' + `${search_string}` + '.*' }},
+          {'body_html': { $regex: '.*' + `${search_string}` + '.*' }},
+          {'status': { $regex: '.*' + `${search_string}` + '.*' }},
+          {'vendor': { $regex: '.*' + `${search_string}` + '.*' }},
+          {'title': { $regex: '.*' + `${search_string}` + '.*' }},
+        ]
+  }, options, function (err, result) {
+    return res.json(result);
+  });
+}else{
+  result = await VendorProduct.paginate({ user_id:  user_id ,
+    $or:[
+          {'id': { $regex: '.*' + `${search_string}` + '.*' }},
+          {'product_type': { $regex: '.*' + `${search_string}` + '.*' }},
+          {'body_html': { $regex: '.*' + `${search_string}` + '.*' }},
+          {'status': { $regex: '.*' + `${search_string}` + '.*' }},
+          {'vendor': { $regex: '.*' + `${search_string}` + '.*' }},
+          {'title': { $regex: '.*' + `${search_string}` + '.*' }},
+        ]
+  }, options, function (err, result) {
+    return res.json(result);
+  });
+}
+  }    
