@@ -3,7 +3,7 @@ const Integration = require("../../models/integration");
 const UserVendorProduct = require("../../models/userVendorProduct");    
 const UserVendorOrder = require("../../models/userVendorOrder");
 const OrderVendor = require("../../models/orderVendor");
-
+const Shopify = require('shopify-api-node');
 var pluck = require('arr-pluck');
 const moment= require('moment');
 
