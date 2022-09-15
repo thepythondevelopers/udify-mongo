@@ -18,7 +18,15 @@ exports.createIntegration = async (req,res) =>{
   let params = { limit: 1 };
             const products = await shopify.product.list(params).then( async data => {
  
-
+   integration_found = await Integration.findOne({store_api_key:req.body.store_api_key,
+    store_api_secret:req.body.store_api_key,
+    domain:req.body.domain,
+    access_token:req.body.access_token});
+    if(integration_found!=null){
+        return res.status(401).json({
+            message : "This Shopify Account is already in Udify."
+        })
+    }             
   store_id = uuidv4();
   store_id = store_id.replace(/-/g,"");
   req.body.store_id = store_id;
@@ -70,7 +78,7 @@ exports.findAllIntegration = (req, res) => {
 
 }
 
-exports.updateIntegration = (req,res)=>{
+exports.updateIntegration = async (req,res)=>{
   const errors = validationResult(req);
   if(!errors.isEmpty()){
       return res.status(402).json({
@@ -84,6 +92,15 @@ exports.updateIntegration = (req,res)=>{
     access_token: req.body.access_token
   }
   
+  integration_found = await Integration.findOne({ _id: { $ne: id },store_api_key:req.body.store_api_key,
+    store_api_secret:req.body.store_api_key,
+    domain:req.body.domain,
+    access_token:req.body.access_token});
+    if(integration_found!=null){
+        return res.status(401).json({
+            message : "This Shopify Account is already in Udify."
+        })
+    }
 
   Integration.findOneAndUpdate(
     { _id: id ,account_id :req.body.account_id,deleted_at:null},

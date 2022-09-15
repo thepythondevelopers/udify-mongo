@@ -22,7 +22,7 @@ exports.syncCustomer = (req,res) =>{
         
           const store_id = data.store_id;
 
-      //await Customer.remove({ store_id : store_id });
+      await Customer.remove({ store_id : store_id });
         
         customer_data=[];
           let params = { limit: 250 };
@@ -69,19 +69,19 @@ exports.syncCustomer = (req,res) =>{
               state :  element.state       
             }
             
-         //Customer.create(customer_content);              
-         Customer.findOneAndUpdate(
-          {store_id : store_id,shopify_id : element.id},
-          {$set : customer_content},
-          {upsert: true,new: true},
-          (err,customer) => {})
+         Customer.create(customer_content);              
+        //  Customer.findOneAndUpdate(
+        //   {store_id : store_id,shopify_id : element.id},
+        //   {$set : customer_content},
+        //   {upsert: true,new: true},
+        //   (err,customer) => {})
 
           }));  
-          shopify_id =  await Customer.find({store_id : store_id}).select('shopify_id');
-          shopify_id = pluck(shopify_id, 'shopify_id');
+        //   shopify_id =  await Customer.find({store_id : store_id}).select('shopify_id');
+        //   shopify_id = pluck(shopify_id, 'shopify_id');
          
-         var difference = shopify_id.filter(x => customer_id.indexOf(x) === -1);
-         await Customer.remove({shopify_id:{$in:difference}})
+        //  var difference = shopify_id.filter(x => customer_id.indexOf(x) === -1);
+        //  await Customer.remove({shopify_id:{$in:difference}})
 
           return res.json(
             {message:"Customer Synced Successfully"});

@@ -28,6 +28,8 @@ const userCatalogRoutes = require("./userCatalog/routes/catalog");
 const userVendorRoutes = require("./userVendor/routes/userVendor");
 const vendorCustomerRoutes = require("./vendorCustomer/routes/vendorCustomer");
 const vendorOrderRoutes = require("./vendorOrder/routes/order");
+
+const pubSubCustomerRoutes = require("./pub-sub-customers/routes/customer");
 //Connection
 mongoose.connect(process.env.DATABASE,{
     useNewUrlParser : true,
@@ -77,6 +79,7 @@ app.use('/user-vendor-node',userVendorRoutes);
 app.use('/vendor-customer-node',vendorCustomerRoutes);
 app.use('/vendor-order-node',vendorOrderRoutes);
 
+app.use('/pub-sub-customer-node',pubSubCustomerRoutes);
 app.listen(port,()=>{
     console.log(`Server is running at port ${port}`)
 });
