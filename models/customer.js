@@ -35,8 +35,7 @@ const CustomerSchema = new Schema({
         default: 0
     },
     shopify_id:{
-        type: String,
-        unique : true
+        type: String
     },
     company:{
         type: String

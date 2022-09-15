@@ -22,14 +22,14 @@ exports.syncCustomer = (req,res) =>{
         
           const store_id = data.store_id;
 
-        Customer.remove({ store_id : store_id });
+      //await Customer.remove({ store_id : store_id });
         
         customer_data=[];
           let params = { limit: 250 };
 
           do {
             const customers = await shopify.customer.list(params);
-            await Promise.all(customers.map(async (element) => {
+             Promise.all(customers.map(async (element) => {
               customer_data.push(element);
             }))
             
@@ -38,10 +38,10 @@ exports.syncCustomer = (req,res) =>{
           } while (params !== undefined);
         
         
-          
+          customer_id = [];
         
-          await Promise.all(customer_data.map(async (element) => {
-                
+           Promise.all(customer_data.map(async (element) => {
+            customer_id.push(""+element.id+"");
             customer_content = {
               store_id : store_id,
               first_name : element.first_name,
@@ -68,11 +68,21 @@ exports.syncCustomer = (req,res) =>{
               default : (typeof element.default_address !== 'undefined') ? element.default_address.default : null,
               state :  element.state       
             }
-      
-         await Customer.create(customer_content);              
-        
+            
+         //Customer.create(customer_content);              
+         Customer.findOneAndUpdate(
+          {store_id : store_id,shopify_id : element.id},
+          {$set : customer_content},
+          {upsert: true,new: true},
+          (err,customer) => {})
+
           }));  
-          
+          shopify_id =  await Customer.find({store_id : store_id}).select('shopify_id');
+          shopify_id = pluck(shopify_id, 'shopify_id');
+         
+         var difference = shopify_id.filter(x => customer_id.indexOf(x) === -1);
+         await Customer.remove({shopify_id:{$in:difference}})
+
           return res.json(
             {message:"Customer Synced Successfully"});
 
@@ -84,7 +94,7 @@ exports.syncCustomer = (req,res) =>{
     })
     .catch(err => {
       res.status(500).send({
-        message: "Error retrieving shopify account with id=" + id,
+        message: "Something Went Wrong",
         error : err
       });
     });
@@ -248,7 +258,7 @@ exports.createCustomerShopify = async (req,res) =>{
         }  
       }).catch(err => {
         res.status(500).send({
-          message: "Error retrieving shopify account with id=" + id,
+          message: "Something Went Wrong",
           err_m : err
         });
       }); 
