@@ -30,7 +30,7 @@ exports.createIntegration = async (req,res) =>{
         return res.json(integration);
       }).catch((err)=>{
         return res.status(400).json({
-            message : "Unable to sabe in db",
+            message : "Unable to save in db",
             error : err 
         })
       })  

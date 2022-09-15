@@ -385,44 +385,6 @@ exports.updateCustomerShopify = async (req,res) =>{
 }
 
 
-// exports.deleteProductShopify = async (req,res) =>{
-  
-//   try {
-//     const id = req.params.store_id;
-//     Integration.findOne({ where: { store_id: id } })
-//       .then( async data => {
-//         if (data) {
-//           const shopify = new Shopify({
-//             shopName: data.domain,
-//             accessToken: data.access_token
-//           });
-//           product =  await shopify.product.delete(req.params.product_id);
-
-//           Product.destroy({
-//             where: {
-//                 id : req.params.product_id
-//             }
-//         })
-//           return res.json({message : "Product Deleted Successfully."});
-//         }else{
-//           res.status(401).send({
-//             message : "Store Not Found."
-//           });  
-//         }
-//       }).catch(err => {
-//         res.status(500).send({
-//           err_m : err
-//         });
-//       });  
-//   }
-//   catch (err) {
-//     return res.status(401).send({
-//       message : "Something Went Wrong",
-//       error :err
-//     });
-//   }
-// }
-
 
 
 exports.checkCustomerEmailExist = async (req,res) =>{

@@ -115,10 +115,9 @@ exports.deleteProductShopify = async (req,res) =>{
           
           await Product.deleteOne(
             {id : req.params.product_id},
-            (err,data) => {
-                
-            }
-            )
+            (err,data) => {          } )
+            await ProductVariant.remove( {product_id:req.params.product_id } )
+
           return res.json({message : "Product Deleted Successfully."});
         }else{
           res.status(401).send({
