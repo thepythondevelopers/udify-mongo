@@ -19,9 +19,10 @@ exports.createIntegration = async (req,res) =>{
             const products = await shopify.product.list(params).then( async data => {
  
    integration_found = await Integration.findOne({store_api_key:req.body.store_api_key,
-    store_api_secret:req.body.store_api_key,
+    store_api_secret:req.body.store_api_secret,
     domain:req.body.domain,
     access_token:req.body.access_token});
+    
     if(integration_found!=null){
         return res.status(401).json({
             message : "This Shopify Account is already in Udify."
@@ -30,7 +31,9 @@ exports.createIntegration = async (req,res) =>{
   store_id = uuidv4();
   store_id = store_id.replace(/-/g,"");
   req.body.store_id = store_id;
-    
+  req.body.user_id = req.user._id;
+  
+  req.body.role = req.user.access_group;      
 
      await Integration
       .create(req.body)

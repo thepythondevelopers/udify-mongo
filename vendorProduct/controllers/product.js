@@ -136,10 +136,10 @@ exports.syncProduct =  (req,res) =>{
             
           } while (params !== undefined);
           
-          VendorProduct.remove({ store_id : store_id });
-          VendorProductVariant.remove({ store_id : store_id });
+          await VendorProduct.remove({ store_id : store_id });
+          await VendorProductVariant.remove({ store_id : store_id });
           //product_data.forEach( async element => {                
-          await Promise.all(product_data.map(async (element) => {  
+          Promise.all(product_data.map(async (element) => {  
           
             product_content = {
               user_id : req.user._id,
@@ -161,8 +161,8 @@ exports.syncProduct =  (req,res) =>{
                 vendor:element.vendor,  
                 status:element.status
             };
-            await   VendorProduct.create(product_content);
-            await shopify_sync_variants(element.variants,store_id,integration_id,req.user._id);
+             VendorProduct.create(product_content);
+           shopify_sync_variants(element.variants,store_id,integration_id,req.user._id);
            // variants = element.variants;
             
                                     

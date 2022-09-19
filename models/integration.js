@@ -25,7 +25,16 @@ const integrationSchema = new Schema({
     account_id: {
       type : ObjectId,
       ref: "Account"
-    }  
+    },
+    user_id: {
+      type : ObjectId,
+      ref: "User"
+    },
+    role: {
+      type : String,
+      required : true
+    }      
+
     },{timestamps: true});
 
 module.exports = mongoose.model("Integration",integrationSchema);
