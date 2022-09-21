@@ -12,9 +12,7 @@ exports.syncCustomer = async (req,res) =>{
 
   integration_data = await Integration.find();
   Promise.all(integration_data.map(async (integration_element) => {
-  // Integration.findOne({_id : id})
-  //   .then( async data => {
-  //     if (data) {
+
         const shopify = new Shopify({
           shopName: integration_element.domain,
           accessToken: integration_element.access_token
@@ -82,21 +80,11 @@ exports.syncCustomer = async (req,res) =>{
          var difference = shopify_id.filter(x => customer_id.indexOf(x) === -1);
          await Customer.remove({shopify_id:{$in:difference}})
 
-          return res.json(
-            {message:"Customer Synced Successfully"});
+          
 
-    //   } else {
-    //     res.status(404).send({
-    //       message: `Cannot connect shopify with id=${id}.`
-    //     });
-    //   }
-    // })
-    // .catch(err => {
-    //   res.status(500).send({
-    //     message: "Something Went Wrong",
-    //     error : err
-    //   });
-    // });
+
     
   }));  
+  return res.json(
+    {message:"Customer Synced Successfully"});
 }
