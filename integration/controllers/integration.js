@@ -96,7 +96,7 @@ exports.updateIntegration = async (req,res)=>{
   }
   
   integration_found = await Integration.findOne({ _id: { $ne: id },store_api_key:req.body.store_api_key,
-    store_api_secret:req.body.store_api_key,
+    store_api_secret:req.body.store_api_secret,
     domain:req.body.domain,
     access_token:req.body.access_token});
     if(integration_found!=null){

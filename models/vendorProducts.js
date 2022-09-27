@@ -6,16 +6,16 @@ const VendorProductSchema = new Schema({
     user_id:{
         type : ObjectId,
         ref: "User",
-        required : true
+        //required : true
     },
     integration_id:{
         type : ObjectId,
         ref: "Integration",
-        required : true
+        //required : true
     },
       store_id : {
         type: String,
-        required : true
+        //required : true
     },
     body_html: {
         type: String
@@ -62,6 +62,10 @@ const VendorProductSchema = new Schema({
     },
     status:{
         type: String
+    },
+    source:{
+        type: String,
+        default: 'Shopify'
     },
     sys_updated_at:{
         type: Date,

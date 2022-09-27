@@ -6,9 +6,10 @@ const VendorProductVariant = require("../../models/vendorProductVariants");
 var pluck = require('arr-pluck');
 const moment= require('moment');
 const {validationResult} = require("express-validator");
-
+const fs = require("fs");
+const parse = require('csv-parse').parse
 //const { json } = require('body-parser');
-
+const { v4: uuidv4 } = require('uuid');
 
 
 exports.getSingleProduct = async (req,res) =>{
@@ -224,4 +225,27 @@ exports.syncProduct =  (req,res) =>{
                 await   VendorProductVariant.create(product_variant_data);
 
             }));
+  }
+
+  exports.csvProduct = async (req,res) =>{
+    file = req.file;
+    fs.createReadStream(file.path)
+  .pipe(parse({ delimiter: ",", from_line: 2 }))
+  .on("data", function (row) {
+    
+    id = uuidv4();
+    id = id.replace(/-/g,"");
+    product_content = {
+      user_id : req.user._id,
+        body_html:row[1],
+        id  : id,
+        images : JSON.stringify(row[2]),
+        product_type:row[3],
+        title:row[0],
+        vendor:row[4],  
+        source : 'Manual'       
+    };
+     VendorProduct.create(product_content);
+  })
+  return res.json({message:"Product Uploaded Successfully"});
   }
