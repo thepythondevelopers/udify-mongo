@@ -2,6 +2,13 @@ const Integration = require("../../models/integration");
 const {validationResult} = require("express-validator");
 const Shopify = require('shopify-api-node');
 const { v4: uuidv4 } = require('uuid');
+const Product = require("../../models/products");
+const ProductVariant = require("../../models/product_variants");
+const Order = require("../../models/order");
+const Customer = require("../../models/customer");
+const VendorProduct = require("../../models/vendorProducts");
+const VendorProductVariant = require("../../models/vendorProductVariants");
+const OrderVendor = require("../../models/orderVendor");
 
 exports.createIntegration = async (req,res) =>{
   
@@ -129,13 +136,11 @@ exports.updateIntegration = async (req,res)=>{
 }
 
 exports.deleteIntegration = (req,res)=>{
+    
   const id = req.params.id;
-  const account_id = req.body.account_id;
-  Integration.findOneAndUpdate(
-    { _id: id ,account_id :account_id},
-    {$set : {deleted_at : Date.now()}},
-    {new: true},
-    (err,integration) => {
+  Integration.findOneAndDelete(
+    { _id: id,user_id : req.user._id },
+    async (err,integration)   => {
         if(err){
             return res.status(404).json({
                 error : err
@@ -147,8 +152,20 @@ exports.deleteIntegration = (req,res)=>{
                 message : "No Data Found"
             })
         }
+        store_id = integration.store_id;
+        if(role=='user'){
+           await Product.remove({ store_id : store_id });
+           await ProductVariant.remove({ store_id : store_id });
+           await Order.remove({ store_id : store_id })
+           await Customer.remove({ store_id : store_id });
+        }
 
-        return res.json(integration);
+        if(role=='supplier'){
+           await VendorProduct.remove({ store_id : store_id });
+           await VendorProductVariant.remove({ store_id : store_id });
+           await OrderVendor.remove({ store_id : store_id })
+        }
+        return res.json({message : "Deleted Successfully."});
     }
     )   
 }

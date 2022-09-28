@@ -20,7 +20,7 @@ router.post("/update-integration/:id",[
     check("domain").isLength({max : 255}).notEmpty(),
     check("access_token").isLength({max : 255}).notEmpty()
 ],updateIntegration);
-router.delete('/delete-integration/:id',verifyToken,isAccountCheck, deleteIntegration);
+router.delete('/delete-integration/:id',verifyToken,deleteIntegration);
 
 
 
