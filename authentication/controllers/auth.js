@@ -368,10 +368,7 @@ exports.signupSupplier =  (req,res)=>{
      if (!user) {
         res.json({error:'Token Expire or Incorrect'});
      } else { 
-      const old_password = bcrypt.hashSync(req.body.old_password, 10);
-      if(old_password != user.password){
-        res.status(400).json({error:'Password Not Match'});
-      }
+      
       const hash = bcrypt.hashSync(req.body.password, 10);
       content =  { 
         password: hash,

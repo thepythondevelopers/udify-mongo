@@ -496,7 +496,7 @@ exports.syncProduct =  (req,res) =>{
     
    
      await Product.paginate({  supplier_id: { $exists: true }  ,
-     user_id : req.user._id,
+      store_id: { $in: store_id },
       published_at: {
         $gte: startedDate,
         $lte: endDate
@@ -515,7 +515,7 @@ exports.syncProduct =  (req,res) =>{
     });
   }else{
     result = await Product.paginate({ supplier_id: { $exists: true }  ,
-     user_id : req.user._id,
+      store_id: { $in: store_id },
       $or:[
             {'id': { $regex: '.*' + `${search_string}` + '.*' }},
             {'product_type': { $regex: '.*' + `${search_string}` + '.*' }},
