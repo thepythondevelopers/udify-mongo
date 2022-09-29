@@ -9,10 +9,10 @@ router.get("/get-single-shopify/:product_id",verifyToken,getSingleProduct);
 
 router.get("/sync-product/:integration_id",verifyToken,syncProduct);
 
-router.post("/get-all-product-store",verifyToken,isAccountCheck,checkStoreId,getProductAccordingtoStore);
+router.post("/get-all-product-store",verifyToken,isAccountCheck,getProductAccordingtoStore);
 
 
-router.get("/get-user-vendor-sync-product",verifyToken,userVendorSyncProduct);
+router.get("/get-user-vendor-sync-product",verifyToken,isAccountCheck,userVendorSyncProduct);
 
 
 
