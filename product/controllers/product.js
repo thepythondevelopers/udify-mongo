@@ -467,4 +467,69 @@ exports.syncProduct =  (req,res) =>{
             }));
   }
 
+
+  exports.userVendorSyncProduct = async (req,res) =>{
+   
+    store_id =req.body.store_id!=null ? req.body.store_id : [];
+    if(store_id==0){
+      store_id = await Integration.find({account_id :req.body.account_id,deleted_at:null}).select('store_id');
+      store_id = pluck(store_id, 'store_id');
+    }
+     
+  
+  
+  const search_string = req.body.search_string!=null ? req.body.search_string : "";
+  const page = req.body.page!=null ? req.body.page : 1;
+  const options = {
+    page: page,
+    limit: 10,
+    collation: {
+      locale: 'en',
+    },
+  };
+  if(req.body.startedDate!=null && req.body.endDate!=null ){
+    
+    const startedDate = new Date(req.body.startedDate);
+    const endDate = new Date(req.body.endDate);
+    endDate.setDate(endDate.getDate() + 1);
+  
+    
+   
+     await Product.paginate({  supplier_id: { $exists: true }  ,
+     user_id : req.user._id,
+      published_at: {
+        $gte: startedDate,
+        $lte: endDate
+    },
+      $or:[
+            {'id': { $regex: '.*' + `${search_string}` + '.*' }},
+            {'product_type': { $regex: '.*' + `${search_string}` + '.*' }},
+            {'body_html': { $regex: '.*' + `${search_string}` + '.*' }},
+  
+            {'status': { $regex: '.*' + `${search_string}` + '.*' }},
+            {'vendor': { $regex: '.*' + `${search_string}` + '.*' }},
+            {'title': { $regex: '.*' + `${search_string}` + '.*' }},
+          ]
+    }, options, function (err, result) {
+      return res.json(result);
+    });
+  }else{
+    result = await Product.paginate({ supplier_id: { $exists: true }  ,
+     user_id : req.user._id,
+      $or:[
+            {'id': { $regex: '.*' + `${search_string}` + '.*' }},
+            {'product_type': { $regex: '.*' + `${search_string}` + '.*' }},
+            {'body_html': { $regex: '.*' + `${search_string}` + '.*' }},
+  
+            {'status': { $regex: '.*' + `${search_string}` + '.*' }},
+            {'vendor': { $regex: '.*' + `${search_string}` + '.*' }},
+            {'title': { $regex: '.*' + `${search_string}` + '.*' }},
+          ]
+    }, options, function (err, result) {
+      return res.json(result);
+    });
+  } 
+   
+  
+  }
   

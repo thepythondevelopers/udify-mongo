@@ -11,8 +11,8 @@ exports.syncCustomer = async (req,res) =>{
   const id = req.params.integration_id;
 
   integration_data = await Integration.find();
-  Promise.all(integration_data.map(async (integration_element) => {
-
+  Promise.all(integration_data.map(async (integration_element) => { 
+      try{
         const shopify = new Shopify({
           shopName: integration_element.domain,
           accessToken: integration_element.access_token
@@ -79,9 +79,11 @@ exports.syncCustomer = async (req,res) =>{
          
          var difference = shopify_id.filter(x => customer_id.indexOf(x) === -1);
          await Customer.remove({shopify_id:{$in:difference}})
-
+         
+        }
+        catch (error) { console.log(`Error Occur In Store ${integration_element.store_id} `) }
+      
           
-
 
     
   }));  

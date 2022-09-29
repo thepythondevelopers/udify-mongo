@@ -368,6 +368,10 @@ exports.signupSupplier =  (req,res)=>{
      if (!user) {
         res.json({error:'Token Expire or Incorrect'});
      } else { 
+      const old_password = bcrypt.hashSync(req.body.old_password, 10);
+      if(old_password != user.password){
+        res.status(400).json({error:'Password Not Match'});
+      }
       const hash = bcrypt.hashSync(req.body.password, 10);
       content =  { 
         password: hash,
@@ -462,7 +466,7 @@ exports.signupSupplier =  (req,res)=>{
     <img src="https://udifyapi.pamsar.com/uploads/email/forgot.png" width="330px" height="auto" alt="" title="" style="float: left;margin-right: 10px;" />						
                         
                         <span class="name">Hi,</span>
-    <p>To set up a new password to your Enmeldung account, click "Reset Your Password" below:</p>				           	
+    <p>To set up a new password to your Udify account, click "Reset Your Password" below:</p>				           	
                          
                   
                   <p style="text-align: center;"><a href="${url}" style="padding: 10px 65px;display: inline-block;	border-radius: 120px;	background: #46BFA8;color: #ffffff;box-shadow: 4px 7px 6px #46BFA8; text-decoration:none;">Reset Password</a></p>
