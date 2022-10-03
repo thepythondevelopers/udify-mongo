@@ -153,3 +153,6 @@ try{
         }
         )
   }
+
+  exports.blackblaze = async (req,res)=>{
+  }

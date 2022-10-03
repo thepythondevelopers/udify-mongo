@@ -82,7 +82,7 @@ exports.signin = (req,res) =>{
   User.findOne({email,access_group,'deleted_at' : null  }, function(err, user) {
     
    if (!user) {
-      return res.json({error:'User Not Found'});
+      return res.json({error:'This email is not registered with Udify'});
    } else {
     bcrypt.compare(req.body.password, user.password, async function (err, result) {
       if (result == true) {
@@ -136,7 +136,7 @@ exports.signinSupplier = (req,res) =>{
   User.findOne({email,access_group,'deleted_at' : null  }, function(err, user) {
     
    if (!user) {
-      return res.json({error:'User Not Found'});
+      return res.json({error:'This email is not registered with Udify'});
    } else {
     bcrypt.compare(req.body.password, user.password, async function (err, result) {
       if (result == true) {
@@ -191,7 +191,7 @@ exports.signinAdmin = (req,res) =>{
   User.findOne({email,access_group,'deleted_at' : null  }, function(err, user) {
     
    if (!user) {
-      return res.json({error:'User Not Found'});
+      return res.json({error:'This email is not registered with Udify'});
    } else {
     bcrypt.compare(req.body.password, user.password, async function (err, result) {
       if (result == true) {
@@ -318,7 +318,7 @@ exports.signupSupplier =  (req,res)=>{
     }
     User.findOne({email: req.body.email}).then(function (user) {
      if (!user) {
-        res.json({error:'User Not Found'});
+        res.json({error:'This email is not registered with Udify'});
      } else {
       User.findOneAndUpdate(
         {email: req.body.email},

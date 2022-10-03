@@ -17,8 +17,10 @@ exports.getUserVendor =  async (req,res) =>{
   exports.getUserSingleVendor =  async (req,res) =>{
     
     
-    supplier = await User.findOne({ _id: req.params.id}).populate('account_id').select('-password')
-    return res.json(supplier);
+    supplier = await User.findOne({ _id: req.params.id,access_group: 'supplier'}).populate('account_id').select('-password');
+    favourite = await FavouriteVendor.find({user_id : req.user._id,supplier_id :req.params.id });
+ 
+    return res.json({data:supplier,favourite:favourite});
   
     }    
 
