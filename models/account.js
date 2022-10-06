@@ -47,7 +47,14 @@ const accountSchema = new Schema({
       type: String
     },
     avatar:{
-      type: String
+      fileId: {
+          type: String,
+          required: true,
+        },
+        filename: {
+          type: String,
+          required: true,
+        }
     },
     cover:{
       type: String

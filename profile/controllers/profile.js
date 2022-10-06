@@ -10,12 +10,15 @@ exports.updateUserProfile1 = async (req,res)=>{
     const id = req.user._id;
         
         content =  {
-          avatar : req.body.avatar,       
+    //      avatar : req.body.avatar,       
           location: req.body.location,
           website: req.body.website,
           about: req.body.about
       }
-    
+      
+      if( req.body.avatar != null){
+        content.avatar  = req.body.avatar;
+    }    
     
      
       await Account.findOneAndUpdate(
@@ -36,7 +39,7 @@ exports.updateUserProfile1 = async (req,res)=>{
                 })
             }
     
-            res.send({message:'Successfully Updated'});
+            res.send(account);
         }
         )
   }
@@ -117,9 +120,9 @@ try{
     const id = req.user._id;
         
     content =  {
-      cover : req.body.cover,       
+             
       title: req.body.title,
-      avatar: req.body.avatar,
+      
       name: req.body.name,
       address_street : req.body.address_street,
       address_city : req.body.address_city,
@@ -129,7 +132,12 @@ try{
       company : req.body.company
   }
     
-    
+  if( req.body.avatar != null){
+    content.avatar  = req.body.avatar;
+}    
+if( req.body.cover != null){
+  content.cover  = req.body.cover;
+}    
      
       await Account.findOneAndUpdate(
         { user_id: id, deleted_at: null},
@@ -155,4 +163,5 @@ try{
   }
 
   exports.blackblaze = async (req,res)=>{
+    return res.json('Controller');
   }

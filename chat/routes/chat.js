@@ -11,7 +11,7 @@ router.post("/save-chat",[
     check("message").notEmpty()
 ],verifyToken,saveChat);
 
-router.post("/get-chat",verifyToken,getChat);
+router.post("/get-chat/:user_id",verifyToken,getChat);
 
 
 

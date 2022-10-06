@@ -8,99 +8,77 @@ const {updateUserProfile2,updateUserProfile1,get_profile,supplierProfileUpdate,b
 const {verifyToken,isAccountCheck,roleCheck,supplierRoleCheck} = require("../../middleware/auth");
 
 
-// const storage = multer.diskStorage({
-//   destination: function(req,file,cb){
-//     cb(null,"./uploads/avatar")
-//   },
-//   filename : function(req,file,cb){
-//     cb(null,Date.now()+file.originalname)
-//   }
-// })
+
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
 
 
-const blackupload = async (req, res, err) => {
-  const b2 = new B2({
-    applicationKeyId: '000f4e6746905c10000000002', 
-    applicationKey: 'K000GYdZmBRz3CpqN1LRN50XAsfzPkw', 
-});
+const blackupload = async (req, res, next) => {
 
-await b2.authorize(); // must authorize first (authorization lasts 24 hrs)
-console.log("I am here");
-// r = b2.getUploadPartUrl({
-//   fileId: '4_zffa48e26a7c456b970550c11_f11798cb0889ac202_d20221002_m142438_c000_v0001401_t0036_u01664720678392'
-//   // ...common arguments (optional)
-// });
-// b2.deleteFileVersion({
-//   fileId: '4_zffa48e26a7c456b970550c11_f11798cb0889ac202_d20221002_m142438_c000_v0001401_t0036_u01664720678392',
-//   fileName: 'fileName'
-//   // ...common arguments (optional)
-// });
+    const b2 = new B2({
+        applicationKeyId: '000f4e6746905c10000000002', 
+        applicationKey: 'K000GYdZmBRz3CpqN1LRN50XAsfzPkw', 
+    });
+    
+    await b2.authorize(); 
+    
+    
+    let response = await b2.getBucket({
+        bucketName: "udify-backend-key",
+    });
+    
+    if( typeof(req.files.avatar) != "undefined" && req.files.avatar !== null){
+        
+        response = await b2.getUploadUrl({
+            bucketId: 'ffa48e26a7c456b970550c11',
+        })
+        result = await b2.uploadFile({
+            uploadUrl: response.data.uploadUrl,
+            uploadAuthToken: response.data.authorizationToken,
+            fileName: req.files.avatar[0].originalname,
+            data: req.files.avatar[0].buffer,
+        })
+        req.body.avatar={
+            fileId : result.data.fileId,
+            filename : result.data.fileName
+        };
+        
+        
+    }
+    if( typeof(req.old_avatar_fileId) != "undefined" && req.old_avatar_fileId !== null){
+        await b2.deleteFileVersion({
+            fileId: req.old_avatar_fileId,
+            fileName: old_avatar_filename
+        });
+    }
 
-let response = await b2.getBucket({
-    bucketName: "udify-backend-key",
-});
+    if( typeof(req.files.cover) != "undefined" && req.files.cover !== null){
 
-// var storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
+        response1 = await b2.getUploadUrl({
+            bucketId: 'ffa48e26a7c456b970550c11',
+        })
+        result1 = await b2.uploadFile({
+            uploadUrl: response1.data.uploadUrl,
+            uploadAuthToken: response1.data.authorizationToken,
+            fileName: req.files.cover[0].originalname,
+            data: req.files.cover[0].buffer,
+        })
+        req.body.cover={
+            fileId : result1.data.fileId,
+            filename : result1.data.fileName
+        };
+           
+    }
+    if( typeof(req.old_cover_fileId) != "undefined" && req.old_cover_fileId !== null){
+        await b2.deleteFileVersion({
+            fileId: req.old_cover_fileId,
+            fileName: old_cover_filename
+        });
+    }
 
-//       cb(null, "./uploads");
-//   },
-//   filename: function (req, file, cb) {
-//       cb(null, file.originalname);
-//   },
-// });
-
-//const multerUploader = multer({});
-//upload(req, res, (err) => {
-  // if (err instanceof multer.MulterError) {
-  //     return res.sendStatus(INTERNAL_SERVER_ERROR_STATUS);
-  //     // A Multer error occurred when uploading.
-  // } else if (err) {
-  //     // An unknown error occurred when uploading.
-  //     return res.sendStatus(INTERNAL_SERVER_ERROR_STATUS);
-  // }
-
-  b2.getUploadUrl({
-      bucketId: 'ffa48e26a7c456b970550c11',
-      // ...common arguments (optional)
-  }).then((response) => {
-      console.log(
-          "getUploadUrl",
-          response.data.uploadUrl,
-          response.data.authorizationToken
-      );
-
-      b2.uploadFile({
-          uploadUrl: response.data.uploadUrl,
-          uploadAuthToken: response.data.authorizationToken,
-          fileName: "fileName",
-          //     key1: "value",
-          // contentLength: 0, // optional data length, will default to data.byteLength or data.length if not provided
-          //mime: "", // optional mime type, will default to 'b2/x-auto' if not provided
-          data: req.file.buffer, // this is expecting a Buffer, not an encoded string
-          //hash: "sha1-hash", // optional data hash, will use sha1(data) if not provided
-          // info: {
-          //     // optional info headers, prepended with X-Bz-Info- when sent, throws error if more than 10 keys set
-          //     // valid characters should be a-z, A-Z and '-', all other characters will cause an error to be thrown
-          //     key2: "value",
-          // },
-          onUploadProgress: (event) => {},
-          //onUploadProgress: (event) => {} || null // progress monitoring
-          // ...common arguments (optional)
-      }).then((response) => {
-          console.log("uploadFIle", response);
-          return res.json({
-              path: req.file.originalname,
-          });
-      });
-
-      // Everything went fine and save document in DB here.
-  });
-//});
+    next();
 }
-router.post("/update-user-profile1",verifyToken,updateUserProfile1);
+router.post("/update-user-profile1",verifyToken,upload.fields([{name:'avatar',maxCount:1}]),blackupload,updateUserProfile1);
 
 router.post("/update-user-profile2",verifyToken,[
 
@@ -118,8 +96,8 @@ router.post("/update-user-profile2",verifyToken,[
 
 router.get("/get-profile",verifyToken,get_profile);
 
-router.post("/supplier-profile-update",verifyToken,supplierRoleCheck,supplierProfileUpdate);
+router.post("/supplier-profile-update",verifyToken,supplierRoleCheck,upload.fields([{name:'avatar',maxCount:1},{name:'cover',maxCount:1}]),supplierProfileUpdate);
 
-router.post("/blackblaze",upload.single('file'),blackupload,blackblaze);
+router.post("/blackblaze",upload.fields([{name:'avatar',maxCount:1}]),blackupload,blackblaze);
 
 module.exports = router;
