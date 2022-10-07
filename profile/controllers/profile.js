@@ -39,7 +39,7 @@ exports.updateUserProfile1 = async (req,res)=>{
                 })
             }
     
-            res.send(account);
+            res.send({message:'Successfully Updated'});
         }
         )
   }
