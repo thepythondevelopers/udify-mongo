@@ -1,3 +1,4 @@
+require('dotenv').config();
 var express = require('express')
 var router = express.Router()
 const { check} = require("express-validator");
@@ -16,21 +17,21 @@ const upload = multer({ storage: storage })
 const blackupload = async (req, res, next) => {
 
     const b2 = new B2({
-        applicationKeyId: '000f4e6746905c10000000002', 
-        applicationKey: 'K000GYdZmBRz3CpqN1LRN50XAsfzPkw', 
+        applicationKeyId: process.env.BLACKBLAZE_KEYID, 
+        applicationKey: process.env.BLACKBLAZE_APPLICATIONKEY, 
     });
     
     await b2.authorize(); 
     
     
     let response = await b2.getBucket({
-        bucketName: "udify-backend-key",
+        bucketName: process.env.BLACKBLAZE_NAME,
     });
     
     if( typeof(req.files.avatar) != "undefined" && req.files.avatar !== null){
         
         response = await b2.getUploadUrl({
-            bucketId: 'ffa48e26a7c456b970550c11',
+            bucketId: process.env.BLACKBLAZE_BucketID,
         })
         result = await b2.uploadFile({
             uploadUrl: response.data.uploadUrl,
