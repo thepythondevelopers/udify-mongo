@@ -31,8 +31,7 @@ const accountSchema = new Schema({
         type: String
     },
 	address_country:{
-        type: String,
-        default: 'US'
+        type: String
     },
 	stripe_customer_id:{
         type: String,
@@ -48,16 +47,19 @@ const accountSchema = new Schema({
     },
     avatar:{
       fileId: {
-          type: String,
-          required: true,
+          type: String
         },
         filename: {
-          type: String,
-          required: true,
+          type: String
         }
     },
     cover:{
-      type: String
+      fileId: {
+        type: String
+      },
+      filename: {
+        type: String
+      }
     },
     vendor_email:{
       type: String
