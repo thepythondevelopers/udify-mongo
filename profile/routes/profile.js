@@ -88,9 +88,7 @@ router.post("/update-user-profile2",verifyToken,[
   check("name").isLength({max : 255}).notEmpty(),
   check("address_street").isLength({max : 255}).notEmpty(),
   check("address_city").isLength({max : 255}).notEmpty(),
-  check("address_state").isLength({max : 2}).notEmpty(),
-  check("address_zip").isLength({max : 255}).notEmpty(),
-  check("address_country").isLength({max : 2}).notEmpty(),
+  check("address_zip").isLength({max : 255}).notEmpty()
 ],updateUserProfile2);
 
 
