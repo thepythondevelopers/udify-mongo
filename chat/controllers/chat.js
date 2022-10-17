@@ -1,3 +1,4 @@
+const User = require("../../models/user");
 const Chat = require("../../models/chat");
 const {validationResult} = require("express-validator");
 const mongoose = require("mongoose");
@@ -46,4 +47,13 @@ exports.getChat = async (req,res) =>{
       ])     
      return res.json(result);    
         
+  }
+  exports.getUserList = async (req,res) =>{
+    user = await User.find({'access_group': 'user'}).select('-password');
+    return res.json(user);    
+  }
+
+  exports.getSupplierList = async (req,res) =>{
+    user = await User.find({'access_group': 'supplier'}).select('-password');
+    return res.json(user);    
   }
