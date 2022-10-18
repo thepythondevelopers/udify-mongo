@@ -38,9 +38,9 @@ exports.getChat = async (req,res) =>{
       user_id = req.params.user_id;
     result = await Chat.aggregate([
         { $match: {
-          $and : [
-            { $or : [{ send_by: ObjectId(req.user._id) }, { send_to: ObjectId(req.user._id) }] },
-            { $or : [ { send_by: ObjectId(user_id) },{ send_to: ObjectId(user_id) } ] }
+          $or : [
+            { $and : [{ send_by: ObjectId(req.user._id) }, { send_to: ObjectId(user_id) }] },
+            { $and : [ { send_by: ObjectId(user_id) },{ send_to: ObjectId(req.user._id) } ] }
         ]
          } },
         {$sort: {_id: 1}},

@@ -39,12 +39,14 @@ mongoose.connect(process.env.DATABASE,{
     useNewUrlParser : true,
     useUnifiedTopology : true,
     useCreateIndex : true,
-     useFindAndModify: false 
+     useFindAndModify: false,
+ 
 }).then(()=>{
     console.log('DATA CONNECTED');
 }).catch((err)=>{
     console.log(err);
 })
+mongoose.set('debug', true)
 
 app.use(express.static('uploads/avatar')); 
 app.use('/uploads/avatar', express.static('uploads/avatar'));
