@@ -46,7 +46,7 @@ mongoose.connect(process.env.DATABASE,{
 }).catch((err)=>{
     console.log(err);
 })
-mongoose.set('debug', true)
+
 
 app.use(express.static('uploads/avatar')); 
 app.use('/uploads/avatar', express.static('uploads/avatar'));
