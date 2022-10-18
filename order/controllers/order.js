@@ -3,6 +3,7 @@ const Order = require("../../models/order");
 const Integration = require("../../models/integration");
 const UserVendorProduct = require("../../models/userVendorProduct");    
 const UserVendorOrder = require("../../models/userVendorOrder");
+var pluck = require('arr-pluck');
 exports.syncOrder =  (req,res) =>{
   //page_info = req.body.page_info;
   const id = req.params.integration_id;
@@ -31,7 +32,7 @@ exports.syncOrder =  (req,res) =>{
           
         } while (params !== undefined);
         
-        await Order.remove({ store_id : store_id })
+       await Order.remove({ store_id : store_id })
         await Promise.all(order_data.map(async (element) => {
           product_ids = [];
           variant_ids = [];
@@ -41,7 +42,7 @@ exports.syncOrder =  (req,res) =>{
           }));
           
           order_content = {
-          
+              user : req.user._id,
               store_id : store_id,
               created_at : element.created_at,
               updated_at : element.updated_at,
@@ -73,6 +74,7 @@ exports.syncOrder =  (req,res) =>{
               fulfillment_status : element.fulfillment_status,
               order_status_url : element.order_status_url,
               customer_id : element.customer!=null ? element.customer.id : '',
+              line_items : element.line_items, 
               variant_ids : JSON.stringify(variant_ids),
               product_ids: JSON.stringify(product_ids)
           }	
@@ -164,3 +166,58 @@ exports.getOrderAccordingtoStore = async (req,res) =>{
     result = await Order.findOne({_id : id});
     return res.json({data:result});
   }
+
+  exports.orderProductSupplierInfo = async (req,res) =>{
+  
+    product_id = req.params.product_id;
+    data = await UserVendorProduct.findOne({product_id:  product_id }).populate('supplier_id');
+    return res.json(data);
+  }
+
+  exports.catalogUserOrderList = async (req,res) =>{
+  
+    shopify_order_id = await UserVendorOrder.find({user_id: req.user._id}).select('shopify_order_id'); 
+    
+    shopify_order_id = pluck(shopify_order_id, 'shopify_order_id');
+    
+      const search_string = req.body.search_string!=null ? req.body.search_string : "";
+  const page = req.body.page!=null ? req.body.page : 1;
+  const options = {
+    page: page,
+    limit: 10,
+    collation: {
+      locale: 'en',
+    },
+  };
+  if(req.body.startedDate!=null && req.body.endDate!=null ){
+    
+    const startedDate = new Date(req.body.startedDate);
+    const endDate = new Date(req.body.endDate);
+    endDate.setDate(endDate.getDate() + 1);
+    
+
+    result = await Order.paginate({ shopify_order_id: { $in: shopify_order_id } ,
+      created_at: {
+        $gte: startedDate,
+        $lte: endDate
+    },
+      $or:[
+            {'name': { $regex: '.*' + `${search_string}` + '.*' }},
+            {'total': { $regex: '.*' + `${search_string}` + '.*' }},
+            {'subtotal': { $regex: '.*' + `${search_string}` + '.*' }},
+          ]
+    }, options, function (err, result) {
+      return res.json(result);
+    });
+  }else{
+    result = await Order.paginate({ shopify_order_id: { $in: shopify_order_id } ,
+            $or:[
+        {'name': { $regex: '.*' + `${search_string}` + '.*' }},
+        {'total': { $regex: '.*' + `${search_string}` + '.*' }},
+        {'subtotal': { $regex: '.*' + `${search_string}` + '.*' }},
+        ]
+    }, options, function (err, result) {
+      return res.json(result);
+    });
+  } 
+  }  
