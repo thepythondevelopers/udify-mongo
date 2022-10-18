@@ -45,7 +45,7 @@ exports.getChat = async (req,res) =>{
          } },
         {$sort: {_id: 1}},
         { $group: { _id :{ $dateToString: { format: "%Y-%m-%d", date: "$createdAt"} },doc: { $push : "$$ROOT" } } },
-        
+        {$sort: {_id: 1}},
         
         
       ])     
