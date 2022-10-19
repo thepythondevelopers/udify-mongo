@@ -47,6 +47,7 @@ exports.getProductAccordingtoStore = async (req,res) =>{
 const search_string = req.body.search_string!=null ? req.body.search_string : "";
 const page = req.body.page!=null ? req.body.page : 1;
 const options = {
+  select : 'id images title product_type price vendor store_id _id',  
   page: page,
   limit: 10,
   collation: {
