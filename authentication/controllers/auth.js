@@ -333,7 +333,7 @@ exports.signupSupplier =  (req,res)=>{
           } 
 
       //url = process.env.BASE_URL+'api/confirm-password/'
-      url = 'http://udify.pamsar.com/reset-password/'+token
+      url = 'http://udify.pamsar.com/#/reset-password/'+token
       try {
         await sendGridMail.send(forgetpassword_email(req.body.email,url));
         console.log('Test email sent successfully');
