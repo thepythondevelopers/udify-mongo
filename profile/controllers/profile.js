@@ -122,7 +122,7 @@ try{
     content =  {
              
       title: req.body.title,
-      
+      phone : req.body.phone,
       name: req.body.name,
       address_street : req.body.address_street,
       address_city : req.body.address_city,
@@ -134,7 +134,8 @@ try{
     
   if( req.body.avatar != null){
     content.avatar  = req.body.avatar;
-}    
+}  
+  
 if( req.body.cover != null){
   content.cover  = req.body.cover;
 }    

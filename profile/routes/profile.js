@@ -95,7 +95,7 @@ router.post("/update-user-profile2",verifyToken,[
 
 router.get("/get-profile",verifyToken,get_profile);
 
-router.post("/supplier-profile-update",verifyToken,supplierRoleCheck,upload.fields([{name:'avatar',maxCount:1},{name:'cover',maxCount:1}]),supplierProfileUpdate);
+router.post("/supplier-profile-update",verifyToken,supplierRoleCheck,upload.fields([{name:'avatar',maxCount:1},{name:'cover',maxCount:1}]),blackupload,supplierProfileUpdate);
 
 router.post("/blackblaze",upload.fields([{name:'avatar',maxCount:1}]),blackupload,blackblaze);
 

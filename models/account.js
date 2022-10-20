@@ -67,6 +67,9 @@ const accountSchema = new Schema({
     store_name:{
       type: String
     },
+    phone:{
+      type : Number
+    },
     title:{
       type: String
     },
