@@ -212,56 +212,56 @@ exports.syncOrder =  (req,res) =>{
     });   
 } 
 
-exports.getOrderAccordingtoStore = async (req,res) =>{
+// exports.getOrderAccordingtoStore = async (req,res) =>{
   
       
-  store_id =req.body.store_id!=null ? req.body.store_id : [];
-  if(store_id==0){
-    store_id = await Integration.find({account_id :req.body.account_id,deleted_at:null}).select('store_id');
-    store_id = pluck(store_id, 'store_id');
-  }
+//   store_id =req.body.store_id!=null ? req.body.store_id : [];
+//   if(store_id==0){
+//     store_id = await Integration.find({account_id :req.body.account_id,deleted_at:null}).select('store_id');
+//     store_id = pluck(store_id, 'store_id');
+//   }
      
-const search_string = req.body.search_string!=null ? req.body.search_string : "";
-const page = req.body.page!=null ? req.body.page : 1;
-const options = {
-  page: page,
-  limit: 10,
-  collation: {
-    locale: 'en',
-  },
-};
-if(req.body.startedDate!=null && req.body.endDate!=null ){
+// const search_string = req.body.search_string!=null ? req.body.search_string : "";
+// const page = req.body.page!=null ? req.body.page : 1;
+// const options = {
+//   page: page,
+//   limit: 10,
+//   collation: {
+//     locale: 'en',
+//   },
+// };
+// if(req.body.startedDate!=null && req.body.endDate!=null ){
   
-  const startedDate = new Date(req.body.startedDate);
-  const endDate = new Date(req.body.endDate);
-  endDate.setDate(endDate.getDate() + 1);
+//   const startedDate = new Date(req.body.startedDate);
+//   const endDate = new Date(req.body.endDate);
+//   endDate.setDate(endDate.getDate() + 1);
   
 
-  result = await OrderVendor.paginate({ store_id: { $in: store_id } ,
-    created_at: {
-      $gte: startedDate,
-      $lte: endDate
-  },
-    $or:[
-          {'name': { $regex: '.*' + `${search_string}` + '.*' }},
-          {'total': { $regex: '.*' + `${search_string}` + '.*' }},
-          {'subtotal': { $regex: '.*' + `${search_string}` + '.*' }},
-        ]
-  }, options, function (err, result) {
-    return res.json(result);
-  });
-}else{
-  result = await OrderVendor.paginate({ store_id: { $in: store_id } ,
-          $or:[
-      {'name': { $regex: '.*' + `${search_string}` + '.*' }},
-      {'total': { $regex: '.*' + `${search_string}` + '.*' }},
-      {'subtotal': { $regex: '.*' + `${search_string}` + '.*' }},
-      ]
-  }, options, function (err, result) {
-    return res.json(result);
-  });
-} 
-}
+//   result = await OrderVendor.paginate({ store_id: { $in: store_id } ,
+//     created_at: {
+//       $gte: startedDate,
+//       $lte: endDate
+//   },
+//     $or:[
+//           {'name': { $regex: '.*' + `${search_string}` + '.*' }},
+//           {'total': { $regex: '.*' + `${search_string}` + '.*' }},
+//           {'subtotal': { $regex: '.*' + `${search_string}` + '.*' }},
+//         ]
+//   }, options, function (err, result) {
+//     return res.json(result);
+//   });
+// }else{
+//   result = await OrderVendor.paginate({ store_id: { $in: store_id } ,
+//           $or:[
+//       {'name': { $regex: '.*' + `${search_string}` + '.*' }},
+//       {'total': { $regex: '.*' + `${search_string}` + '.*' }},
+//       {'subtotal': { $regex: '.*' + `${search_string}` + '.*' }},
+//       ]
+//   }, options, function (err, result) {
+//     return res.json(result);
+//   });
+// } 
+// }
 
 exports.getSingleOrder = async (req,res) =>{
   const id = req.params.order_id;
