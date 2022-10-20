@@ -129,7 +129,10 @@ try{
       about : req.body.about,
       vendor_email : req.body.vendor_email,
       store_name : req.body.store_name,
-      company : req.body.company
+      company : req.body.company,
+      address_state : req.body.address_state,
+      address_zip : req.body.address_zip,
+      address_country : req.body.address_country
   }
     
   if( req.body.avatar != null){
