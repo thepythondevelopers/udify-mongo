@@ -101,7 +101,7 @@ if(req.body.startedDate!=null && req.body.endDate!=null ){
 }
 
 
-exports.getManaulProduct = async (req,res) =>{
+exports.getProduct = async (req,res) =>{
       
   const search_string = req.body.search_string!=null ? req.body.search_string : "";
   const page = req.body.page!=null ? req.body.page : 1;
