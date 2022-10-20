@@ -282,22 +282,39 @@ exports.syncProduct =  (req,res) =>{
   exports.csvProduct = async (req,res) =>{
     file = req.file;
     fs.createReadStream(file.path)
-  .pipe(parse({ delimiter: ",", from_line: 2 }))
-  .on("data", function (row) {
-    
-    id = uuidv4();
-    id = id.replace(/-/g,"");
-    product_content = {
-      user_id : req.user._id,
-        body_html:row[1],
-        id  : id,
-        images : JSON.stringify(row[2]),
-        product_type:row[3],
-        title:row[0],
-        vendor:row[4],  
-        source : 'Manual'       
-    };
-     VendorProduct.create(product_content);
-  })
-  return res.json({message:"Product Uploaded Successfully"});
+    .pipe(parse({ delimiter: ",", from_line: 2 }))
+    .on("data", function (row) {
+      var string = row[2];
+var image_array = string.split(",");
+      id = uuidv4();
+      id = id.replace(/-/g,"");
+      product_content = {
+        user_id : req.user._id,
+          body_html:row[1],
+          id  : id,
+          images : image_array,
+          product_type:row[3],
+          title:row[0],
+          vendor:row[4],  
+          source : 'Manual'       
+      };
+      await = VendorProduct.create(product_content);
+      str = row[5];
+     if(str!=null){ 
+      
+      const json = '[' + str.replace(/}\n?{/g, '},{') + ']';
+      
+      JSON.parse(json).forEach(async  (obj) => {
+         product_variant_data = {
+          product_id : id,
+          sku : obj.sku,
+          price : obj.price,
+          option1 : obj.option1,
+          user_id : req.user._id
+        }
+        await   VendorProductVariant.create(product_variant_data);
+      });
+    } 
+    })
+    return res.json({message:"Product Uploaded Successfully"}); 
   }

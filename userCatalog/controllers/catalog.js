@@ -74,7 +74,7 @@ exports.addProduct =  async (req,res) =>{
         Promise.all(variant.map(async (data) => {
           key++;
           variant={
-            "option1" : data.option1+key,
+            "option1" : data.option1,
             "sku": data.sku,
             "price" : data.price
           }

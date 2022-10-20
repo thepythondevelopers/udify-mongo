@@ -28,7 +28,7 @@ const VendorProductSchema = new Schema({
         required : true
     },
     images:{
-        type: String
+        type: Array
     },
     options:{
         type: String

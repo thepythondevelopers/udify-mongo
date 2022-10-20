@@ -10,11 +10,11 @@ const VendorProductVariantSchema = new Schema({
       integration_id:{
         type : ObjectId,
         ref: "Integration",
-        required : true
+        
       },  
       store_id:{
         type: String,
-        required : true
+        //required : true
       },
       product_id:{
         type: String
