@@ -82,6 +82,21 @@ exports.addProduct =  async (req,res) =>{
         }))
         shopify_product.variants = variant_data;  
       }
+
+      if(result.images!=null){
+        images = result.images;
+        images_data =[];
+        key=1;
+        Promise.all(images.map(async (data) => {
+          key++;
+          image={
+            "src" : data,
+          }
+          images_data.push(image);
+        }))
+        shopify_product.images = images_data;  
+      }
+      
       
       
     const id = req.params.store_id;

@@ -10,6 +10,7 @@ const cookieParser = require("cookie-parser");
 //Routes
 const authRoutes = require("./authentication/routes/auth");
 const adminUser = require("./admin/routes/user");
+const aggrementRoutes = require("./agreement/routes/agreement");
 const stripeRoutes = require("./stripe/routes/stripe");
 const cmsPageRoutes = require("./cmsPage/routes/cms_pages");
 const knowledgebaseRoutes = require("./knowledgebase/routes/knowledgebase");
@@ -66,6 +67,7 @@ app.use(cors());
 //My Routes
 app.use('/authentication-node',authRoutes);
 app.use('/admin-node',adminUser);
+app.use('/aggrement-node',aggrementRoutes);
 app.use('/cms-node',cmsPageRoutes);
 app.use('/knowledgebase-node',knowledgebaseRoutes);
 app.use('/integration-node',integrationRoutes);
