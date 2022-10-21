@@ -73,6 +73,7 @@ exports.syncOrder = async (req,res) =>{
             fulfillment_status : element.fulfillment_status,
             order_status_url : element.order_status_url,
             customer_id : element.customer!=null ? element.customer.id : '',
+            line_items : element.line_items,
             variant_ids : JSON.stringify(variant_ids),
             product_ids: JSON.stringify(product_ids)
         }	
@@ -107,54 +108,9 @@ exports.syncOrder = async (req,res) =>{
             {$set : order_content},
             {upsert: true,new: true},
             (err,order) => {})
-          //UserVendorOrder.create(vendorOrderData);
+         
         }          
-        }else{
-          order_content = {
-          
-            store_id : store_id,
-            created_at : element.created_at,
-            updated_at : element.updated_at,
-            subtotal : element.subtotal_price,
-            total : element.total_price,
-            closed_at : element.closed_at,
-            shopify_order_id : element.id,
-            note : element.note,
-            token :element.token,
-            gateway : element.gateway,
-            total_weight : element.total_weight,
-            total_tax : element.total_tax,
-            taxes_included : element.taxes_included,
-            currency : element.currency,
-            financial_status : element.financial_status,
-            confirmed : element.confirmed,
-            total_discounts : element.total_discounts,
-            total_line_items_price : element.total_line_items_price,
-            cart_token : element.cart_token,
-            name : element.name,
-            cancelled_at : element.cancelled_at,
-            cancel_reason : element.cancel_reason,
-            total_price_usd : element.total_price_usd,
-            checkout_token : element.checkout_token,
-            processed_at : element.processed_at,
-            device_id : element.device_id,
-            app_id : element.app_id,
-            browser_ip : element.browser_ip,
-            fulfillment_status : element.fulfillment_status,
-            order_status_url : element.order_status_url,
-            customer_id : element.customer!=null ? element.customer.id : '',
-            variant_ids : JSON.stringify(variant_ids),
-            product_ids: JSON.stringify(product_ids)
-        } 
-        
-
-        //OrderVendor.create(order_content);         
-        OrderVendor.findOneAndUpdate(
-          {store_id : store_id,shopify_order_id : element.id},
-          {$set : order_content},
-          {upsert: true,new: true},
-          (err,order) => {})
-        }  
+        }
 
       }));
       
