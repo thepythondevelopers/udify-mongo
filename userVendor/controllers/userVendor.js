@@ -4,7 +4,7 @@ const {validationResult} = require("express-validator");
 var pluck = require('arr-pluck');
 const UserVendorProduct = require("../../models/userVendorProduct");
 const FavouriteVendor = require("../../models/favouriteVendor");
-
+const Agreement = require("../../models/agreement");
 exports.getUserVendor =  async (req,res) =>{
     
   supplier_id = await UserVendorProduct.find({user_id : req.user._id}).select('supplier_id');
@@ -19,8 +19,8 @@ exports.getUserVendor =  async (req,res) =>{
     
     supplier = await User.findOne({ _id: req.params.id,access_group: 'supplier'}).populate('account_id').select('-password');
     favourite = await FavouriteVendor.find({user_id : req.user._id,supplier_id :req.params.id });
- 
-    return res.json({data:supplier,favourite:favourite});
+    aggreement = await Agreement.findOne({user : req.user._id,supplier : req.params.supplier});
+    return res.json({data:supplier,favourite:favourite,aggreement:aggreement});
   
     }    
 
