@@ -24,7 +24,7 @@ exports.aggreement = async (req,res) =>{
                 message : err
             })
         }
-        return res.status(401).json({message : 'Aggreement made successfully.'}); 
+        return res.status(201).json({message : 'Aggreement made successfully.'}); 
     })          
       
 }
