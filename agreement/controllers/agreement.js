@@ -9,7 +9,7 @@ exports.aggreement = async (req,res) =>{
 
   aggreement = await Agreement.findOne({user : req.user._id,supplier : req.params.supplier});
   if(aggreement!=null){
-    return res.status(401).json({message : 'Already have aggrement'}); 
+    return res.status(201).json({message : 'Already have aggrement'}); 
   }
       
     data = {
@@ -24,7 +24,7 @@ exports.aggreement = async (req,res) =>{
                 message : err
             })
         }
-        return res.status(201).json({message : 'Aggreement made successfully.'}); 
+        return res.status(200).json({message : 'Aggreement made successfully.'}); 
     })          
       
 }
