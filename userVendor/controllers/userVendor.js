@@ -19,7 +19,7 @@ exports.getUserVendor =  async (req,res) =>{
     
     supplier = await User.findOne({ _id: req.params.id,access_group: 'supplier'}).populate('account_id').select('-password');
     favourite = await FavouriteVendor.find({user_id : req.user._id,supplier_id :req.params.id });
-    aggreement = await Agreement.findOne({user : req.user._id,supplier : req.params.supplier});
+    aggreement = await Agreement.findOne({user : req.user._id,supplier : req.params.id});
     return res.json({data:supplier,favourite:favourite,aggreement:aggreement});
   
     }    
