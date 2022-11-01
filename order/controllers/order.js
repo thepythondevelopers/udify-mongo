@@ -3,6 +3,8 @@ const Order = require("../../models/order");
 const Integration = require("../../models/integration");
 const UserVendorProduct = require("../../models/userVendorProduct");    
 const UserVendorOrder = require("../../models/userVendorOrder");
+const Product = require("../../models/products");
+const ProductVariant = require("../../models/product_variants");
 var pluck = require('arr-pluck');
 exports.syncOrder =  (req,res) =>{
   //page_info = req.body.page_info;
@@ -171,7 +173,19 @@ exports.getOrderAccordingtoStore = async (req,res) =>{
   
     product_id = req.params.product_id;
     data = await UserVendorProduct.findOne({product_id:  product_id }).populate('supplier_id');
-    return res.json(data);
+    product = await Product.aggregate([
+      { $match : { id : product_id } },
+      { 
+        $lookup:
+         {
+           from: 'productvariants',
+           localField: 'id',
+           foreignField: 'product_id',
+           as: 'variant'
+         }
+       }
+      ])
+    return res.json({vendor : data,product: product});
   }
 
   exports.catalogUserOrderList = async (req,res) =>{

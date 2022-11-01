@@ -153,18 +153,14 @@ exports.deleteIntegration = (req,res)=>{
             })
         }
         store_id = integration.store_id;
-        if(role=='user'){
-           await Product.remove({ store_id : store_id });
-           await ProductVariant.remove({ store_id : store_id });
-           await Order.remove({ store_id : store_id })
-           await Customer.remove({ store_id : store_id });
-        }
+        // if(role=='user'){
+        //    await Product.remove({ store_id : store_id });
+        //    await ProductVariant.remove({ store_id : store_id });
+        //    await Order.remove({ store_id : store_id })
+        //    await Customer.remove({ store_id : store_id });
+        // }
 
-        if(role=='supplier'){
-           await VendorProduct.remove({ store_id : store_id });
-           await VendorProductVariant.remove({ store_id : store_id });
-           await OrderVendor.remove({ store_id : store_id })
-        }
+
         return res.json({message : "Deleted Successfully."});
     }
     )   
