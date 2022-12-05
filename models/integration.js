@@ -32,7 +32,12 @@ const integrationSchema = new Schema({
     },
     role: {
       type : String,
-      required : true
+      required : true,
+      default : 'user'
+    },
+    deleted_at :{
+      type : Date,
+      default : null
     }      
 
     },{timestamps: true});

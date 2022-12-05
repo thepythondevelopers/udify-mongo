@@ -117,7 +117,7 @@ exports.getOrderAccordingtoStore = async (req,res) =>{
       
     store_id =req.body.store_id!=null ? req.body.store_id : [];
     if(store_id==0){
-      store_id = await Integration.find({account_id :req.body.account_id,deleted_at:null}).select('store_id');
+      store_id = await Integration.find({user_id :req.user._id,deleted_at:null}).select('store_id');
       store_id = pluck(store_id, 'store_id');
     }
        
@@ -165,7 +165,7 @@ exports.getOrderAccordingtoStore = async (req,res) =>{
 
   exports.getSingleOrder = async (req,res) =>{
     const id = req.params.order_id;
-    result = await Order.findOne({_id : id});
+    result = await Order.findOne({_id : id,user : req.user._id});
     return res.json({data:result});
   }
 
@@ -188,7 +188,7 @@ exports.getOrderAccordingtoStore = async (req,res) =>{
     return res.json({vendor : data,product: product});
   }
 
-  exports.catalogUserOrderList = async (req,res) =>{
+exports.catalogUserOrderList = async (req,res) =>{
   
     shopify_order_id = await UserVendorOrder.find({user_id: req.user._id}).select('shopify_order_id'); 
     

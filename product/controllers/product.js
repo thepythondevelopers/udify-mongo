@@ -36,7 +36,7 @@ exports.getProductAccordingtoStore = async (req,res) =>{
    
   store_id =req.body.store_id!=null ? req.body.store_id : [];
   if(store_id==0){
-    store_id = await Integration.find({account_id :req.body.account_id,deleted_at:null}).select('store_id');
+    store_id = await Integration.find({user_id :req.user._id,deleted_at:null}).select('store_id');
     store_id = pluck(store_id, 'store_id');
   }
    
@@ -353,7 +353,7 @@ exports.updateProductShopify = async (req,res) =>{
 exports.syncProduct =  (req,res) =>{
     //page_info = req.body.page_info;
     const id = req.params.integration_id;
-    Integration.findOne({_id : id})
+    Integration.findOne({_id : id,user_id : req.user._id})
       .then( async data => {
         if (data) {
           const shopify = new Shopify({
@@ -363,7 +363,7 @@ exports.syncProduct =  (req,res) =>{
           
           
             const store_id = data.store_id;
-
+            const user_id = data.user_id;
             
             
 
@@ -404,7 +404,8 @@ exports.syncProduct =  (req,res) =>{
                 metafields_global_title_tag:"",
                 metafields_global_description_tag:"",
                 vendor:element.vendor,  
-                status:element.status
+                status:element.status,
+                user_id : user_id
             }
                Product.create(product_content);
              shopify_sync_variants(element.variants,store_id);
@@ -469,68 +470,68 @@ exports.syncProduct =  (req,res) =>{
   }
 
 
-  exports.userVendorSyncProduct = async (req,res) =>{
+  // exports.userVendorSyncProduct = async (req,res) =>{
    
-    store_id =req.body.store_id!=null ? req.body.store_id : [];
-    if(store_id==0){
-      store_id = await Integration.find({account_id :req.body.account_id,deleted_at:null}).select('store_id');
-      store_id = pluck(store_id, 'store_id');
-    }
+  //   store_id =req.body.store_id!=null ? req.body.store_id : [];
+  //   if(store_id==0){
+  //     store_id = await Integration.find({account_id :req.body.account_id,deleted_at:null}).select('store_id');
+  //     store_id = pluck(store_id, 'store_id');
+  //   }
      
   
   
-  const search_string = req.body.search_string!=null ? req.body.search_string : "";
-  const page = req.body.page!=null ? req.body.page : 1;
-  const options = {
-    page: page,
-    limit: 10,
-    collation: {
-      locale: 'en',
-    },
-  };
-  if(req.body.startedDate!=null && req.body.endDate!=null ){
+  // const search_string = req.body.search_string!=null ? req.body.search_string : "";
+  // const page = req.body.page!=null ? req.body.page : 1;
+  // const options = {
+  //   page: page,
+  //   limit: 10,
+  //   collation: {
+  //     locale: 'en',
+  //   },
+  // };
+  // if(req.body.startedDate!=null && req.body.endDate!=null ){
     
-    const startedDate = new Date(req.body.startedDate);
-    const endDate = new Date(req.body.endDate);
-    endDate.setDate(endDate.getDate() + 1);
+  //   const startedDate = new Date(req.body.startedDate);
+  //   const endDate = new Date(req.body.endDate);
+  //   endDate.setDate(endDate.getDate() + 1);
   
     
    
-     await Product.paginate({  supplier_id: { $exists: true }  ,
-      store_id: { $in: store_id },
-      published_at: {
-        $gte: startedDate,
-        $lte: endDate
-    },
-      $or:[
-            {'id': { $regex: '.*' + `${search_string}` + '.*' }},
-            {'product_type': { $regex: '.*' + `${search_string}` + '.*' }},
-            {'body_html': { $regex: '.*' + `${search_string}` + '.*' }},
+  //    await Product.paginate({  supplier_id: { $exists: true }  ,
+  //     store_id: { $in: store_id },
+  //     published_at: {
+  //       $gte: startedDate,
+  //       $lte: endDate
+  //   },
+  //     $or:[
+  //           {'id': { $regex: '.*' + `${search_string}` + '.*' }},
+  //           {'product_type': { $regex: '.*' + `${search_string}` + '.*' }},
+  //           {'body_html': { $regex: '.*' + `${search_string}` + '.*' }},
   
-            {'status': { $regex: '.*' + `${search_string}` + '.*' }},
-            {'vendor': { $regex: '.*' + `${search_string}` + '.*' }},
-            {'title': { $regex: '.*' + `${search_string}` + '.*' }},
-          ]
-    }, options, function (err, result) {
-      return res.json(result);
-    });
-  }else{
-    result = await Product.paginate({ supplier_id: { $exists: true }  ,
-      store_id: { $in: store_id },
-      $or:[
-            {'id': { $regex: '.*' + `${search_string}` + '.*' }},
-            {'product_type': { $regex: '.*' + `${search_string}` + '.*' }},
-            {'body_html': { $regex: '.*' + `${search_string}` + '.*' }},
+  //           {'status': { $regex: '.*' + `${search_string}` + '.*' }},
+  //           {'vendor': { $regex: '.*' + `${search_string}` + '.*' }},
+  //           {'title': { $regex: '.*' + `${search_string}` + '.*' }},
+  //         ]
+  //   }, options, function (err, result) {
+  //     return res.json(result);
+  //   });
+  // }else{
+  //   result = await Product.paginate({ supplier_id: { $exists: true }  ,
+  //     store_id: { $in: store_id },
+  //     $or:[
+  //           {'id': { $regex: '.*' + `${search_string}` + '.*' }},
+  //           {'product_type': { $regex: '.*' + `${search_string}` + '.*' }},
+  //           {'body_html': { $regex: '.*' + `${search_string}` + '.*' }},
   
-            {'status': { $regex: '.*' + `${search_string}` + '.*' }},
-            {'vendor': { $regex: '.*' + `${search_string}` + '.*' }},
-            {'title': { $regex: '.*' + `${search_string}` + '.*' }},
-          ]
-    }, options, function (err, result) {
-      return res.json(result);
-    });
-  } 
+  //           {'status': { $regex: '.*' + `${search_string}` + '.*' }},
+  //           {'vendor': { $regex: '.*' + `${search_string}` + '.*' }},
+  //           {'title': { $regex: '.*' + `${search_string}` + '.*' }},
+  //         ]
+  //   }, options, function (err, result) {
+  //     return res.json(result);
+  //   });
+  // } 
    
   
-  }
+  // }
   

@@ -21,7 +21,7 @@ exports.syncCustomer = (req,res) =>{
 
         
           const store_id = data.store_id;
-
+          const user_id = data.user_id;
       await Customer.remove({ store_id : store_id });
         
         customer_data=[];
@@ -43,6 +43,7 @@ exports.syncCustomer = (req,res) =>{
            Promise.all(customer_data.map(async (element) => {
             customer_id.push(""+element.id+"");
             customer_content = {
+              user : user_id,
               store_id : store_id,
               first_name : element.first_name,
               last_name : element.last_name,
@@ -104,7 +105,7 @@ exports.syncCustomer = (req,res) =>{
 
 exports.getSingleCustomer = async (req,res) =>{
   const id = req.params.customer_id;
-  result = await Customer.findOne({_id : id})
+  result = await Customer.findOne({_id : id,user : req.user._id})
   return res.json({data:result});
 }
 
@@ -117,7 +118,7 @@ exports.getCustomerAccordingtoStore = async (req,res) =>{
   
   store_id =req.body.store_id!=null ? req.body.store_id : [];
   if(store_id==0){
-    store_id = await Integration.find({account_id :req.body.account_id,deleted_at:null}).select('store_id');
+    store_id = await Integration.find({user_id :req.user._id,deleted_at:null}).select('store_id');
     store_id = pluck(store_id, 'store_id');
   }
   const search_string = req.body.search_string!=null ? req.body.search_string : "";
@@ -222,6 +223,7 @@ exports.createCustomerShopify = async (req,res) =>{
           const store_id = data.store_id;
           
               customer_content = {
+                user : req.user._id,
                 store_id : store_id,
                 first_name : customer.first_name,
                 last_name : customer.last_name,

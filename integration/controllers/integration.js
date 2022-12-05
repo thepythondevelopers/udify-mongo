@@ -28,11 +28,11 @@ exports.createIntegration = async (req,res) =>{
    integration_found = await Integration.findOne({store_api_key:req.body.store_api_key,
     store_api_secret:req.body.store_api_secret,
     domain:req.body.domain,
-    access_token:req.body.access_token});
+    user_id : req.user._id});
     
     if(integration_found!=null){
         return res.status(401).json({
-            message : "This Shopify Account is already in Udify."
+            message : "This Shopify Account is already in your Account."
         })
     }             
   store_id = uuidv4();
@@ -63,7 +63,7 @@ exports.createIntegration = async (req,res) =>{
 
 exports.findIntegration = (req,res) =>{
     const id = req.params.id;
-    Integration.findOne({_id:id,account_id :req.body.account_id,deleted_at: null}).exec((err,integration)=>{
+    Integration.findOne({_id:id,user_id :req.user._id,deleted_at: null}).exec((err,integration)=>{
         if(err){
             return res.status(400).json({
                 message : "Something Went Wrong"
@@ -74,8 +74,8 @@ exports.findIntegration = (req,res) =>{
   }
   
 exports.findAllIntegration = (req, res) => {
-    account_id = req.body.account_id;
-    Integration.find({account_id :req.body.account_id,deleted_at: null}).select('-access_token -store_api_key -store_api_secret').exec((err,integration)=>{
+    
+    Integration.find({user_id :req.user._id,deleted_at: null}).select('-access_token -store_api_key -store_api_secret').exec((err,integration)=>{
       if(err){
           return res.status(400).json({
               message : "No Data Found"
@@ -104,11 +104,10 @@ exports.updateIntegration = async (req,res)=>{
   
   integration_found = await Integration.findOne({ _id: { $ne: id },store_api_key:req.body.store_api_key,
     store_api_secret:req.body.store_api_secret,
-    domain:req.body.domain,
-    access_token:req.body.access_token});
+    domain:req.body.domain});
     if(integration_found!=null){
         return res.status(401).json({
-            message : "This Shopify Account is already in Udify."
+            message : "This Shopify Account is already in your Account."
         })
     }
 
@@ -138,30 +137,27 @@ exports.updateIntegration = async (req,res)=>{
 exports.deleteIntegration = (req,res)=>{
     
   const id = req.params.id;
-  Integration.findOneAndDelete(
-    { _id: id,user_id : req.user._id },
-    async (err,integration)   => {
-        if(err){
-            return res.status(404).json({
-                error : err
-            })
-        
-        }
-        if(integration===null){
-            return res.status(404).json({
-                message : "No Data Found"
-            })
-        }
-        store_id = integration.store_id;
-        // if(role=='user'){
-        //    await Product.remove({ store_id : store_id });
-        //    await ProductVariant.remove({ store_id : store_id });
-        //    await Order.remove({ store_id : store_id })
-        //    await Customer.remove({ store_id : store_id });
-        // }
-
-
-        return res.json({message : "Deleted Successfully."});
+    content = {
+        deleted_at : new Date()
     }
-    )   
+    Integration.findOneAndUpdate(
+        { _id: id ,user_id :req.user._id,deleted_at:null},
+        {$set : content},
+        {new: true},
+        (err,integration) => {
+            if(err){
+                return res.status(404).json({
+                    error : err
+                })
+            
+            }
+    
+            if(integration===null){
+                return res.status(404).json({
+                    message : "No Data Found"
+                })
+            }
+    
+            return res.json(integration);
+        })
 }

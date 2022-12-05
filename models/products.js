@@ -53,6 +53,10 @@ const ProductSchema = new Schema({
     status:{
         type: String
     },
+    user_id:{
+        type : ObjectId,
+        ref: "User"
+    },
     supplier_id:{
         type : ObjectId,
         ref: "User"
