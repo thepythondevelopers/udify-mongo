@@ -53,7 +53,7 @@ exports.signup =  (req,res)=>{
       {$set : update_content},
     )
 
-    res.json({
+    return res.json({
       first_name : user.first_name,
       email : user.email,
       id : user._id,
@@ -284,7 +284,7 @@ exports.signupSupplier =  (req,res)=>{
       {_id: user._id},
       {$set : update_content},
     )
-    res.json({
+    return res.json({
       first_name : user.first_name,
       email : user.email,
       id : user._id,

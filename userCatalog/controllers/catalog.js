@@ -113,7 +113,8 @@ exports.addProduct =  async (req,res) =>{
           product =  await shopify.product.create(shopify_product);
                      
           const store_id = data.store_id;
-            
+          const integration_id = data._id;
+
             product_content = {
                 store_id : store_id,
                 body_html:product.body_html,
@@ -131,7 +132,8 @@ exports.addProduct =  async (req,res) =>{
                 metafields_global_description_tag:"",
                 vendor:product.vendor,  
                 status:product.status,
-                supplier_id : supplier_id 
+                supplier_id : supplier_id,
+                user_id : req.user._id 
             };
           
             await   Product.create(product_content);
@@ -176,7 +178,9 @@ exports.addProduct =  async (req,res) =>{
               user_vendor_product_data = {
                 user_id : req.user._id,
                 supplier_id : supplier_id,
-                product_id : product.id
+                product_id : product.id,
+                store_id : store_id,
+                integration_id : integration_id
               }
               await   UserVendorProduct.create(user_vendor_product_data);
           return res.json({message : "Product Created Successfully."});

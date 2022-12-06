@@ -15,6 +15,15 @@ const userVendorProductSchema = new Schema({
   product_id: {
     type: String,
     required : true
+  },
+  store_id : {
+    type: String,
+    required : true
+  },
+  integration_id :{
+    type : ObjectId,
+    ref: "Integration",
+    required : true
   }
 },{timestamps: true});
 
