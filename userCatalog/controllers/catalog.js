@@ -97,10 +97,14 @@ exports.addProduct =  async (req,res) =>{
         shopify_product.images = images_data;  
       }
       
-      
-      
-    const id = req.params.store_id;
-    Integration.findOne({  store_id: id  })
+    p = await Product.findOne({supplier_product_id : req.params.id, user_id: req.user._id});  
+    if(p!=null){
+      return res.status(401).send({
+        message : "Product is already added to store."
+      });
+    }  
+    
+    Integration.findOne({  store_id: req.params.store_id  })
       .then( async data => {
         if (data) {
           const shopify = new Shopify({
@@ -116,6 +120,7 @@ exports.addProduct =  async (req,res) =>{
           const integration_id = data._id;
 
             product_content = {
+              supplier_product_id : id,
                 store_id : store_id,
                 body_html:product.body_html,
                 handle: "",
@@ -178,6 +183,7 @@ exports.addProduct =  async (req,res) =>{
               user_vendor_product_data = {
                 user_id : req.user._id,
                 supplier_id : supplier_id,
+                supplier_product_id : id,
                 product_id : product.id,
                 store_id : store_id,
                 integration_id : integration_id
@@ -203,6 +209,10 @@ exports.addProduct =  async (req,res) =>{
 
 
 
+    }else{
+      res.status(401).send({
+        message : "Product Not Found."
+      });  
     }
 
 

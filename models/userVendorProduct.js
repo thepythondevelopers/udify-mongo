@@ -12,6 +12,10 @@ const userVendorProductSchema = new Schema({
     ref: "User",
     required : true
   },
+  supplier_product_id :{
+    type: String,
+    required : true
+  },
   product_id: {
     type: String,
     required : true

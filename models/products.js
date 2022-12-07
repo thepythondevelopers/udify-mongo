@@ -61,6 +61,9 @@ const ProductSchema = new Schema({
         type : ObjectId,
         ref: "User"
     },
+    supplier_product_id:{
+        type : String
+    },
     sys_updated_at:{
         type: Date,
         default: Date.now

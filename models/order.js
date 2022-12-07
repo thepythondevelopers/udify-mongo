@@ -16,6 +16,10 @@ const OrderSchema = new Schema({
         type: String,
         required : true
       },
+      integration_id:{
+        type : ObjectId,
+        ref: "Integration"
+      },
     //   subtotal: {
     //     type: String,
     //     required : true

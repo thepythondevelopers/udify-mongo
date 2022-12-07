@@ -5,6 +5,7 @@ const UserVendorProduct = require("../../models/userVendorProduct");
 const UserVendorOrder = require("../../models/userVendorOrder");
 const Product = require("../../models/products");
 const ProductVariant = require("../../models/product_variants");
+const OrderAssign = require("../../models/orderAssign");
 var pluck = require('arr-pluck');
 exports.syncOrder =  (req,res) =>{
   //page_info = req.body.page_info;
@@ -44,6 +45,7 @@ exports.syncOrder =  (req,res) =>{
           }));
           
           order_content = {
+              integration_id : integration_id,  
               user : req.user._id,
               store_id : store_id,
               created_at : element.created_at,
@@ -234,4 +236,98 @@ exports.catalogUserOrderList = async (req,res) =>{
       return res.json(result);
     });
   } 
+  }  
+
+  exports.orderassign = async (req,res) =>{
+    order_id = req.params.order_id;
+    vendor_id = req.params.vendor_id;
+
+
+    orderCheck = UserVendorOrder.findOne({user_id: req.user._id,supplier_id: vendor_id,shopify_order_id:order_id,integration_id:req.body.integration_id,store_id:req.body.store_id})
+    if(orderCheck!=null){
+    order = await OrderAssign.findOne({
+      order_id : order_id,
+      product_id : req.body.product_id,
+      assign_by : req.user._id,
+      assign_to : vendor_id,
+      store_id : req.body.store_id,
+      integration_id : req.body.integration_id});
+      if(order!=null){
+        return res.status(401).json({
+          message : "Already Assign."
+        })
+      }
+   data = { 
+    order_id : order_id,
+    product_id : req.body.product_id,
+    assign_by : req.user._id,
+    assign_to : vendor_id,
+    store_id : req.body.store_id,
+    integration_id : req.body.integration_id
+   }
+    await OrderAssign.create(data);
+    return res.json({
+      message : "Order Assign Successfully."
+    })
+  }else{
+    return res.status(401).json({
+      message : "Order Does not Belong To Supplier."
+    })
+  }
+  }  
+
+  exports.orderPaymentAsk = async (req,res) =>{
+    data ={
+            payment_ask : 1
+    }  
+
+      await OrderAssign.findOneAndUpdate(
+        { assign_to: req.user._id,_id : req.params.id},
+        {$set : data},
+        {new: true},
+        (err,account) => {
+            if(err){
+                return res.status(404).json({
+                    error : err
+                })
+            
+            }
+    
+            if(account===null){
+                return res.status(404).json({
+                    message : "No Data Found"
+                })
+            }
+    
+            res.send({message:'Payment Request Generated.'});
+        }
+        )
+  }
+
+  exports.orderProductTrack = async (req,res) =>{
+    data ={
+            tracking_number : 1
+    }  
+
+      await OrderAssign.findOneAndUpdate(
+        { assign_to: req.user._id,_id : req.params.id},
+        {$set : data},
+        {new: true},
+        (err,account) => {
+            if(err){
+                return res.status(404).json({
+                    error : err
+                })
+            
+            }
+    
+            if(account===null){
+                return res.status(404).json({
+                    message : "No Data Found"
+                })
+            }
+    
+            res.send({message:'Payment Request Generated.'});
+        }
+        )
   }  
