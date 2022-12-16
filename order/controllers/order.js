@@ -7,6 +7,8 @@ const Product = require("../../models/products");
 const ProductVariant = require("../../models/product_variants");
 const OrderAssign = require("../../models/orderAssign");
 var pluck = require('arr-pluck');
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 exports.syncOrder =  (req,res) =>{
   //page_info = req.body.page_info;
   const id = req.params.integration_id;
@@ -167,7 +169,7 @@ exports.getOrderAccordingtoStore = async (req,res) =>{
 
   exports.getSingleOrder = async (req,res) =>{
     const id = req.params.order_id;
-    result = await Order.findOne({_id : id,user : req.user._id});
+    result = await Order.findOne({_id : id,user : ObjectId(req.user._id)});
     return res.json({data:result});
   }
 

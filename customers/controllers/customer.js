@@ -121,6 +121,7 @@ exports.getCustomerAccordingtoStore = async (req,res) =>{
     store_id = await Integration.find({user_id :req.user._id,deleted_at:null}).select('store_id');
     store_id = pluck(store_id, 'store_id');
   }
+
   const search_string = req.body.search_string!=null ? req.body.search_string : "";
   const page = req.body.page!=null ? 1 : 0;
   const options = {
