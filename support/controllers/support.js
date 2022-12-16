@@ -309,22 +309,22 @@ exports.forgotTicketId = (req,res)=>{
   .then(async data => {   
     
     if(data.length===0){
-      res.json({message:"No Ticket Found with this Email id."})
+      return res.json({message:"No Ticket Found with this Email id."})
     }
     try {
       await sendGridMail.send(forgot_email_ticket(req,data));
-      res.send({message:"Ticket Details has been send to this email id.",
+      return res.send({message:"Ticket Details has been send to this email id.",
       
     });
     } catch (error) {
-      res.status(500).send({
+      return res.status(500).send({
         message:
           error.message || "Some error occurred while generating reset password."
       });
     }
   })
   .catch(err => {
-    res.status(500).send({
+    return res.status(500).send({
       message:
         err.message || "Some error occurred while retrieving."
     });
