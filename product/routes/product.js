@@ -12,7 +12,7 @@ router.get("/sync-product/:integration_id",verifyToken,syncProduct);
 router.post("/get-all-product-store",verifyToken,isAccountCheck,getProductAccordingtoStore);
 
 
-//router.get("/get-user-vendor-sync-product",verifyToken,isAccountCheck,userVendorSyncProduct);
+router.get("/get-user-vendor-sync-product",verifyToken,isAccountCheck,userVendorSyncProduct);
 
 
 
