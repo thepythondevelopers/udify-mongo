@@ -2,7 +2,7 @@ var express = require('express')
 var router = express.Router()
 const { check} = require("express-validator");
 const User = require("../../models/user");
-const {signup,signupSupplier,signin,signinSupplier,signinAdmin,forget_password,change_password,logout} = require("../controllers/auth");
+const {signup,signupSupplier,signin,signinSupplier,signinAdmin,forget_password,change_password,updateUserStatus,logout} = require("../controllers/auth");
 
 const {verifyToken} = require("../../middleware/auth");
 
@@ -78,7 +78,7 @@ router.post("/change-password/:password_reset_token",[
 ],change_password);
 
 
-
+router.post("/user-status",verifyToken,updateUserStatus);
 router.get("/logout",verifyToken,logout);
 
 module.exports = router;

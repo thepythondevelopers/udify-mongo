@@ -557,3 +557,12 @@ exports.logout = (req,res) =>{
  });
 }
 
+exports.updateUserStatus = async (req,res)=>{
+  update_content = {user_status : req.body.status};
+    await User.findOneAndUpdate(
+      {_id: req.user._id},
+      {$set : update_content},
+    )
+    return res.json({Message : "Status Changed"
+  });
+}  
