@@ -103,6 +103,16 @@ exports.signin = (req,res) =>{
         });
       });
       await UserToken.deleteOne({ createdAt:{$lte:moment().subtract(1, 'days').toDate()} });
+      data = {
+        user_status : 'Active'
+      }
+      await User.findOneAndUpdate(
+          { _id: user._id },
+          {$set : data},
+          {new: true},
+          async (err,data) =>  {
+              
+      })
       account_id = await Account.findOne({user_id:user._id});
         return res.json({token,user:{user_name,user_email,user_role,access_group,account_id}});
       } else {
@@ -158,6 +168,16 @@ exports.signinSupplier = (req,res) =>{
       });
       await UserToken.deleteOne({ createdAt:{$lte:moment().subtract(1, 'days').toDate()} });
       account_id = await Account.findOne({user_id:user._id});
+            data = {
+        user_status : 'Active'
+      }
+      await User.findOneAndUpdate(
+          { _id: user._id },
+          {$set : data},
+          {new: true},
+          async (err,data) =>  {
+              
+      })
         return res.json({token,user:{user_name,user_email,user_role,access_group,account_id}});
       } else {
         return res.json({error:"Incorrect Password"});
@@ -505,6 +525,16 @@ exports.logout = (req,res) =>{
   UserToken.deleteOne({token: token}).then(function(rowDeleted){
    
     if(rowDeleted.deletedCount==1){
+      data = {
+        user_status : 'Inactive'
+      }
+              User.findOneAndUpdate(
+          { _id: req.user._id },
+          {$set : data},
+          {new: true},
+          async (err,data) =>  {
+              
+      })
     return  res.status(200).send({
         message:"Logout Successfully."
       });

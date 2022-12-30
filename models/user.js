@@ -55,6 +55,11 @@ const userSchema = new Schema({
         enum : ['trial','basic','pro','enterprise'], 
         default: 'trial'
     },
+    user_status:{
+        type: String, 
+        enum : ['Active','Inactive'], 
+        default: 'Inactive'
+    },
     deleted_at:{
         type: Date
       },
