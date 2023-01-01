@@ -15,6 +15,11 @@ const chatschema = new Schema({
   message:{
     type: String,
     required : true
+  },
+  read:{
+    type: Boolean,
+    required : true,
+    default : 0
   }
 },{timestamps: true});
 

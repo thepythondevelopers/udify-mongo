@@ -61,3 +61,32 @@ exports.getChat = async (req,res) =>{
     user = await User.find({'access_group': 'supplier'}).select('-password');
     return res.json(user);    
   }
+
+exports.chatNotification = async (req,res) =>{
+    chat_notification = await Chat.aggregate([
+      { $match: {
+        send_to : ObjectId(req.user._id)
+       } },
+       
+       
+   { $group: { _id :{ send_by: "$send_by" },count:{$sum:1} } },
+   { "$lookup": {
+    "from": "users",
+    "localField": "_id.send_by",
+    "foreignField": "_id",
+    "as": "from"
+}}, 
+    ])     
+    return res.json(chat_notification);    
+  }  
+
+exports.markChatRead = async (req,res) =>{
+  update_content ={
+    read :1
+  }
+  await Chat.findOneAndUpdate(
+    {send_to: req.user._id,send_by: req.params.send_by},
+    {$set : update_content},
+  )
+  return res.json({Message : "Messages are read."});
+}
