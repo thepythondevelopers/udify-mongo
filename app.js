@@ -105,6 +105,12 @@ const io = require('socket.io')(server, {
       origin: '*',
     }
   });
-  io.on("connection", function (socket) {
-    console.log("Made socket connection");
+  io.on('connection', (socket) => {
+    console.log('Hello');
+    socket.on('chat', (msg) => {
+      io.emit('chat', msg);
+      console.log(msg)
+    });
+    
+    
   });
