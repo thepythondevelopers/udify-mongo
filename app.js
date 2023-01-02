@@ -5,7 +5,9 @@ const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-
+const socketIO = require('socket.io');
+const http = require('http');
+let server = http.createServer(app)
 
 //Routes
 const authRoutes = require("./authentication/routes/auth");
@@ -93,7 +95,16 @@ app.use('/pub-sub-order-node',pubSubOrderRoutes);
 app.use('/pub-sub-product-node',pubSubProductRoutes);
 
 
-app.listen(port,()=>{
-    console.log(`Server is running at port ${port}`)
-});
+// app.listen(port,()=>{
+//     console.log(`Server is running at port ${port}`)
+// });
 
+server.listen(port);
+const io = require('socket.io')(server, {
+    cors: {
+      origin: '*',
+    }
+  });
+  io.on("connection", function (socket) {
+    console.log("Made socket connection");
+  });
