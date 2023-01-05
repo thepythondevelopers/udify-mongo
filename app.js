@@ -8,7 +8,7 @@ const cookieParser = require("cookie-parser");
 const socketIO = require('socket.io');
 const http = require('http');
 let server = http.createServer(app)
-
+app.set('view engine', 'ejs');
 //Routes
 const authRoutes = require("./authentication/routes/auth");
 const adminUser = require("./admin/routes/user");
@@ -94,6 +94,12 @@ app.use('/pub-sub-customer-node',pubSubCustomerRoutes);
 app.use('/pub-sub-order-node',pubSubOrderRoutes);
 app.use('/pub-sub-product-node',pubSubProductRoutes);
 
+app.get('/', (req, res)=>{
+ 
+  
+  res.render('home');
+   
+  });
 
 // app.listen(port,()=>{
 //     console.log(`Server is running at port ${port}`)
