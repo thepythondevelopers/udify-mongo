@@ -113,10 +113,13 @@ const io = require('socket.io')(server, {
   });
   io.on('connection', (socket) => {
     console.log('Hello');
-    socket.on('chat', (msg) => {
-      io.emit('chat', msg);
+    socket.on('customer', (msg) => {
+      io.emit('customer', msg);
       console.log(msg)
     });
-    
+    socket.on('vendor', (msg) => {
+      io.emit('vendor', msg);
+      console.log(msg)
+    });
     
   });

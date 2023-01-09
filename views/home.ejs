@@ -17,6 +17,7 @@
 <body>
     <center>This is our home page.</center>
     <script>
+        //const socket =io ('https://udifyapi.pamsar.com',{transports: ['websocket']})
         const socket =io ('https://udifyapi.pamsar.com')
         socket.emit('chat', 'Check');
 //         io.on("connection", function (socket) {
