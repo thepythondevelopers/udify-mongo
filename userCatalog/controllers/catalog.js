@@ -99,7 +99,7 @@ exports.addProduct =  async (req,res) =>{
       
     p = await Product.findOne({supplier_product_id : req.params.id, user_id: req.user._id});  
     if(p!=null){
-      return res.status(401).send({
+      return res.status(400).send({
         message : "Product is already added to store."
       });
     }  
