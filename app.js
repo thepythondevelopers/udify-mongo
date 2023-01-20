@@ -113,13 +113,19 @@ const io = require('socket.io')(server, {
   });
   io.on('connection', (socket) => {
     console.log('Hello');
-    socket.on('customer', (msg) => {
-      io.emit('customer', msg);
-      console.log(msg)
+    socket.on('customer', (data) => {
+      io.emit('customer', {"message":data.msg,"send_to":data.send_to,"send_by":data.send_by});
+      console.log("customer")
+      console.log(data.msg)
+      console.log(data.send_to)
+      console.log(data.send_by)
     });
-    socket.on('vendor', (msg) => {
-      io.emit('vendor', msg);
-      console.log(msg)
+       socket.on('vendor', (data) => {
+      io.emit('vendor', {"message":data.msg,"send_to":data.send_to,"send_by":data.send_by});
+      console.log("vendor")
+      console.log(data.msg)
+      console.log(data.send_to)
+      console.log(data.send_by)
     });
     
   });
