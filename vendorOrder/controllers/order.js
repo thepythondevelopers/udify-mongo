@@ -62,7 +62,7 @@ exports.getUserOrder =  async (req,res) =>{
               let: { vendor_order_details: '$vendor_order_details' },
               pipeline: [
                   { $match: { '$expr': { '$in': ['$_id', '$$vendor_order_details.user_id'] } } },
-                 
+                  { "$project": { "password": 0,"password_reset_token": 0 }}
               ],
               as: 'user_details',
           }
