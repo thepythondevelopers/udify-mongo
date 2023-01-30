@@ -98,7 +98,15 @@ exports.syncOrder =  (req,res) =>{
               integration_id : integration_id,
               store_id : store_id
             }
-            UserVendorOrder.create(vendorOrderData);
+            uvendorOrder = await UserVendorOrder.findOne({user_id : req.user._id,
+              supplier_id : vendorOrder.supplier_id,
+              product_id : vendorOrder.product_id});
+            if(uvendorOrder!=null){
+
+            }else{
+              UserVendorOrder.create(vendorOrderData);  
+            }
+            
           }
       }));
       return res.json(
